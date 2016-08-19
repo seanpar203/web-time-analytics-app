@@ -5,18 +5,23 @@
 
 	// Default State Variables.
 	let tabs = [];
+	let currentTabSet = false;
 	let currentTab = {
 		name: '',
-		counter: 0
+		seconds: 0
 	};
 
+	// Chrome API Reassignment
+	let tabQuery = chrome.tabs.query;
+	let sendMessage = chrome.tabs.sendMessage;
 
-	// Listeners
+	// Chrome Listeners
 	chrome.runtime.onMessage.addListener(messageHandler);
 	chrome.tabs.onActivated.addListener(o => {console.log(o)});
 
-	// Listener Handlers
+
 	/**
+	 * Handles adding and removing tabs from tabs array.
 	 * @param {object} req - Object message sent from content.js
 	 * @param {object} sender - Object containing data related to tab.
 	 * @param {method} res - method for returning a response
@@ -67,6 +72,30 @@
 		function sendRemoveTabMessage(tab) {
 			res({message: `Removed tab with url ${tab}`});
 		}
+	}
+
+	/**
+	 * Handles Setting current tab.
+	 * @param tab
+	 */
+	function activateHandler(tab) {
+
+		function requestTabUrl() {
+			sendMessage(tab.tabId, {message: 'urlRequest'}, res => {
+				currentTab.name = res.url;
+			})
+		}
+	}
+
+
+	function startCounter() {
+		while (currentTabSet) {
+			setInterval(increment, 1000)
+		}
+	}
+
+	function increment() {
+		currentTab.seconds += 1
 	}
 
 })();
