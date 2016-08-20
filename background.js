@@ -31,46 +31,42 @@
 		// Handle Message Accordingly
 		switch (req.message) {
 			case 'newTab':
-				handleNewTab(req.tab);
+				handleNewTab();
+				newTabResponse();
 				break;
 
 			case 'closeTab':
-				handleCloseTab(req.tab);
+				handleCloseTab();
+				removeTabResponse();
 				break;
 		}
 
 		/**
 		 * Adds tab to tabs array & returns message to content.js
-		 * @param {string} tab
 		 */
-		function handleNewTab(tab) {
-			tabs.push(tab);
-			sendNewTabMessage(tab);
+		function handleNewTab() {
+			tabs.push(req.tab);
 		}
 
 		/**
 		 * Removes tab from tabs array & returns message to content.js
-		 * @param {string} tab
 		 */
-		function handleCloseTab(tab) {
-			tabs.splice(tabs.indexOf(tab), 1);
-			sendRemoveTabMessage(tab);
+		function handleCloseTab() {
+			tabs.splice(tabs.indexOf(req.tab), 1);
 		}
 
 		/**
 		 * Sends response of new tab to content.js
-		 * @param tab
 		 */
-		function sendNewTabMessage(tab) {
-			res({message: `Added tab with url ${tab}`});
+		function newTabResponse() {
+			res({message: `Added tab with url ${req.tab}`});
 		}
 
 		/**
 		 * Sends response of removal of tab to content.js
-		 * @param tab
 		 */
-		function sendRemoveTabMessage(tab) {
-			res({message: `Removed tab with url ${tab}`});
+		function removeTabResponse() {
+			res({message: `Removed tab with url ${req.tab}`});
 		}
 	}
 
