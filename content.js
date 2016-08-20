@@ -4,12 +4,6 @@
 
 (() => {
 
-	// Default Variables.
-	let host = window.location.host;
-
-	// Chrome API Reassignment
-	let sendMessage = chrome.runtime.sendMessage;
-
 	// Chrome Listeners
 	chrome.runtime.onMessage.addListener(messageHandler);
 

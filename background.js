@@ -15,9 +15,9 @@
 	let tabQuery = chrome.tabs.query;
 	let sendMessage = chrome.tabs.sendMessage;
 
-	// Chrome Listeners
+	// Chrome Listeners & Handlers
 	chrome.runtime.onMessage.addListener(messageHandler);
-	chrome.tabs.onActivated.addListener(o => {console.log(o)});
+	chrome.tabs.onActivated.addListener(activateHandler);
 
 
 	/**
@@ -95,7 +95,7 @@
 	}
 
 	function increment() {
-		currentTab.seconds += 1
+		currentTab.seconds++;
 	}
 
 })();
