@@ -15,21 +15,20 @@
 	 * @param {method} res - method for returning a response
 	 */
 	function messageHandler(req, sender, res) {
-		console.log(req, sender, res);
+
 		// Handle Message Accordingly
 		switch (req.message) {
-			case 'urlRequest':
-				res({url: host});
+			case 'tabHostName':
+				hostNameRequest();
 				break;
 		}
+
+		/**
+		 * Returns the current tabs hostname as response to message.
+		 */
+		function hostNameRequest() {
+			let host = window.location.host;
+			res({hostName: host});
+		}
 	}
-
-
-	// On Every Page Load.
-	sendMessage({
-		message: 'newTab',
-		tab: host
-	}, (response) => {
-		console.log(response.message);
-	});
 })();
