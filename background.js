@@ -75,11 +75,21 @@
 	 * @param tab
 	 */
 	function activateHandler(tab) {
+		requestTabUrl();
 
+		/**
+		 * Requests current tabs host name ex: www.facebook.com
+		 */
 		function requestTabUrl() {
-			sendMessage(tab.tabId, {message: 'urlRequest'}, res => {
-				currentTab.name = res.url;
-			})
+			sendMessage(tab.tabId, {message: 'tabHostName'}, handleResponse)
+		}
+
+		/**
+		 * Handles response from requestTabUrl method.
+		 * @param {object} res - response object with data sent from content.js
+		 */
+		function handleResponse(res) {
+			console.log(res.hostName);
 		}
 	}
 
