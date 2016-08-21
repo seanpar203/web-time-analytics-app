@@ -9,26 +9,17 @@
 
 	/**
 	 * Handles sending data to background.js
-	 * @param {object} req - Object message sent from content.js
-	 * @param {object} sender - Object containing data related to tab.
-	 * @param {method} res - method for returning a response
+	 * @param {object} req - Object message sent from background.js
+	 * @param {object} sender - Object containing data related to message.
+	 * @param {method} res - method for returning a response.
 	 */
 	function messageHandler(req, sender, res) {
 
-
 		// Handle Message Accordingly
 		switch (req.message) {
-			case 'tabHostName':
-				hostNameRequest();
+			case 'host':
+				res({host: window.location.host});
 				break;
-		}
-
-		/**
-		 * Returns the current tabs hostname as response to message.
-		 */
-		function hostNameRequest() {
-			let host = window.location.host;
-			res({hostName: host});
 		}
 	}
 })();

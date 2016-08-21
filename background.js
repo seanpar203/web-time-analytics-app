@@ -2,17 +2,6 @@
  * Created by sean on 15/08/2016.
  */
 (() => {
-	// Create new TabManager Class.
-	const TM = new TabManager();
-
-	// Chrome API Reassignment.
-	let tabQuery = chrome.tabs.query;
-	let sendMessage = chrome.tabs.sendMessage;
-
-	// Chrome Listeners & Handlers.
-	chrome.tabs.onActivated.addListener(TM.activateHandler);
-
-
 	/**
 	 * Class to manage active tab state and handle ajax requests.
 	 */
@@ -31,7 +20,7 @@
 		 * Sets tabHost property to reflect new active tab.
 		 * @param host
 		 */
-		set tab(host) {
+		set host(host) {
 			this.currentTabSet = false;
 			this.saveTab();
 			this.tabHost = host;
@@ -54,21 +43,17 @@
 		 * @param {object} tab - object containing tab id and window id.
 		 */
 		activateHandler(tab) {
-			sendMessage(tab.tabId,
-				{message: 'tabHostName'},
-				(res) => console.log(res))
+			sendMessage(
+				tab.tabId,
+				{message: 'host'},
+				res => console.log(res)
+			);
+			this.saveTab();
 		}
 
-
 		saveTab() {
-			// $.ajax({
-			// 	type: 'POST',
-			// 	dataType: 'json',
-			// 	data: JSON.stringify(this.activeTab)
-			// })
-
 			$.ajax('http://jsonplaceholder.typicode.com/posts', {
-				 method: 'POST',
+				 type: 'POST',
 				 data: {
 					 title: 'foo',
 					 body: 'bar',
@@ -81,7 +66,7 @@
 		}
 
 		/**
-		 * setInterval counter to increment seconds property every 1s as long as
+		 * setInterval counter to increment seconds property every 1s, as long as
 		 * property currentTabSet is true.
 		 */
 		startCounter() {
@@ -97,5 +82,15 @@
 			this.seconds++;
 		}
 	}
+
+	// Create new TabManager Class.
+	const TM = new TabManager();
+
+	// Chrome API Reassignment.
+	const tabQuery = chrome.tabs.query;
+	const sendMessage = chrome.tabs.sendMessage;
+
+	// Chrome Listeners & Handlers.
+	chrome.tabs.onActivated.addListener(TM.activateHandler.bind(TM));
 
 })();
