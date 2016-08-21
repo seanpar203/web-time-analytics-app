@@ -2,106 +2,100 @@
  * Created by sean on 15/08/2016.
  */
 (() => {
+	// Create new TabManager Class.
+	const TM = new TabManager();
 
-	// Default State Variables.
-	let tabs = [];
-	let currentTabSet = false;
-	let currentTab = {
-		name: '',
-		seconds: 0
-	};
-
-	// Chrome API Reassignment
+	// Chrome API Reassignment.
 	let tabQuery = chrome.tabs.query;
 	let sendMessage = chrome.tabs.sendMessage;
 
-	// Chrome Listeners & Handlers
-	chrome.runtime.onMessage.addListener(messageHandler);
-	chrome.tabs.onActivated.addListener(activateHandler);
+	// Chrome Listeners & Handlers.
+	chrome.tabs.onActivated.addListener(TM.activateHandler);
 
 
 	/**
-	 * Handles adding and removing tabs from tabs array.
-	 * @param {object} req - Object message sent from content.js
-	 * @param {object} sender - Object containing data related to tab.
-	 * @param {method} res - method for returning a response
+	 * Class to manage active tab state and handle ajax requests.
 	 */
-	function messageHandler(req, sender, res) {
+	class TabManager {
 
-		// Handle Message Accordingly
-		switch (req.message) {
-			case 'newTab':
-				handleNewTab();
-				newTabResponse();
-				break;
-
-			case 'closeTab':
-				handleCloseTab();
-				removeTabResponse();
-				break;
+		/**
+		 * Creates basic properties for tab state.
+		 */
+		constructor() {
+			this.seconds = 0;
+			this.tabHost = '';
+			this.currentTabSet = false;
 		}
 
 		/**
-		 * Adds tab to tabs array & returns message to content.js
+		 * Sets tabHost property to reflect new active tab.
+		 * @param host
 		 */
-		function handleNewTab() {
-			tabs.push(req.tab);
+		set tab(host) {
+			this.currentTabSet = false;
+			this.saveTab();
+			this.tabHost = host;
+			this.seconds = 0;
 		}
 
 		/**
-		 * Removes tab from tabs array & returns message to content.js
+		 * Gets tab state in object format for ajax request.
+		 * @returns {{host: (string|*), seconds: number}}
 		 */
-		function handleCloseTab() {
-			tabs.splice(tabs.indexOf(req.tab), 1);
+		get activeTab() {
+			return {
+				host: this.tabHost,
+				seconds: this.seconds
+			}
 		}
 
 		/**
-		 * Sends response of new tab to content.js
+		 * Callback for onActivated requests active tabs host name on new active tab.
+		 * @param {object} tab - object containing tab id and window id.
 		 */
-		function newTabResponse() {
-			res({message: `Added tab with url ${req.tab}`});
+		activateHandler(tab) {
+			sendMessage(tab.tabId,
+				{message: 'tabHostName'},
+				(res) => console.log(res))
+		}
+
+
+		saveTab() {
+			// $.ajax({
+			// 	type: 'POST',
+			// 	dataType: 'json',
+			// 	data: JSON.stringify(this.activeTab)
+			// })
+
+			$.ajax('http://jsonplaceholder.typicode.com/posts', {
+				 method: 'POST',
+				 data: {
+					 title: 'foo',
+					 body: 'bar',
+					 userId: 1
+				 }
+			 })
+			 .then(function (data) {
+				 console.log(data);
+			 });
 		}
 
 		/**
-		 * Sends response of removal of tab to content.js
+		 * setInterval counter to increment seconds property every 1s as long as
+		 * property currentTabSet is true.
 		 */
-		function removeTabResponse() {
-			res({message: `Removed tab with url ${req.tab}`});
-		}
-	}
-
-	/**
-	 * Handles Setting current tab.
-	 * @param tab
-	 */
-	function activateHandler(tab) {
-		requestTabUrl();
-
-		/**
-		 * Requests current tabs host name ex: www.facebook.com
-		 */
-		function requestTabUrl() {
-			sendMessage(tab.tabId, {message: 'tabHostName'}, handleResponse)
+		startCounter() {
+			while (this.currentTabSet) {
+				setInterval(this.increment, 1000)
+			}
 		}
 
 		/**
-		 * Handles response from requestTabUrl method.
-		 * @param {object} res - response object with data sent from content.js
+		 * Callback for startCounter to increment seconds property.
 		 */
-		function handleResponse(res) {
-			console.log(res.hostName);
+		increment() {
+			this.seconds++;
 		}
-	}
-
-
-	function startCounter() {
-		while (currentTabSet) {
-			setInterval(increment, 1000)
-		}
-	}
-
-	function increment() {
-		currentTab.seconds++;
 	}
 
 })();
