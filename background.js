@@ -2,6 +2,7 @@
  * Created by sean on 15/08/2016.
  */
 (() => {
+
 	/**
 	 * Class to manage active tab state and handle ajax requests.
 	 */
@@ -11,9 +12,8 @@
 		 * Creates basic properties for tab state.
 		 */
 		constructor() {
-			this.seconds = 0;
 			this.tabHost = '';
-			this.currentTabSet = false;
+			this.tabSet = false;
 		}
 
 		/**
@@ -21,10 +21,11 @@
 		 * @param host
 		 */
 		set host(host) {
-			this.currentTabSet = false;
-			this.saveTab();
+			this.tabSet = false;
 			this.tabHost = host;
 			this.seconds = 0;
+			this.tabSet = true;
+			this.startCounter();
 		}
 
 		/**
@@ -33,8 +34,8 @@
 		 */
 		get activeTab() {
 			return {
-				host: this.tabHost,
-				seconds: this.seconds
+				host:    this.tabHost,
+				seconds: this.seconds,
 			}
 		}
 
@@ -43,36 +44,46 @@
 		 * @param {object} tab - object containing tab id and window id.
 		 */
 		activateHandler(tab) {
-			sendMessage(
-				tab.tabId,
-				{message: 'host'},
-				res => console.log(res)
-			);
-			this.saveTab();
+			// Message to send to content.js
+			let msg = {
+				message: 'host'
+			};
+
+			sendMessage(tab.tabId, msg, res => {
+				if (!this.tabSet) {
+					this.host = res.host;
+				} else {
+					this.saveTab(this.activeTab);
+					this.host = res.host;
+				}
+			});
 		}
 
-		saveTab() {
-			$.ajax('http://jsonplaceholder.typicode.com/posts', {
-				 type: 'POST',
-				 data: {
-					 title: 'foo',
-					 body: 'bar',
-					 userId: 1
-				 }
-			 })
-			 .then(function (data) {
-				 console.log(data);
-			 });
+		saveTab(tabData) {
+			console.log(tabData);
+		}
+
+	}
+
+	class User {
+		constructor() {
+			this.email = '';
+			this.id = '';
 		}
 
 		/**
-		 * setInterval counter to increment seconds property every 1s, as long as
-		 * property currentTabSet is true.
+		 * Sets Users attributes.
+		 * @param user
 		 */
-		startCounter() {
-			while (this.currentTabSet) {
-				setInterval(this.increment, 1000)
-			}
+		set user(user) {
+			this.email = user.email;
+			this.id = user.id;
+		}
+	}
+
+	class Counter {
+		constructor() {
+			this.seconds = 0;
 		}
 
 		/**
@@ -81,10 +92,27 @@
 		increment() {
 			this.seconds++;
 		}
+
+		/**
+		 * setInterval counter to increment seconds property every 1s, as long as
+		 * property currentTabSet is true.
+		 */
+		startCounter() {
+			const interval = setInterval(this.increment, 1000);
+		}
+
+		/**
+		 * Removes interval process
+		 */
+		stopCounter() {
+			clearInterval(interval)
+		}
 	}
 
-	// Create new TabManager Class.
+	// Create new Instances of Classes.
+	const user = new User();
 	const TM = new TabManager();
+	const counter = new Counter();
 
 	// Chrome API Reassignment.
 	const tabQuery = chrome.tabs.query;
