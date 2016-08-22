@@ -3,122 +3,114 @@
  */
 (() => {
 
-	/**
-	 * Class to manage active tab state and handle ajax requests.
-	 */
-	class TabManager {
+    /**
+     * Class to manage active tab state and handle ajax requests.
+     */
+    class TabManager {
 
-		/**
-		 * Creates basic properties for tab state.
-		 */
-		constructor() {
-			this.tabHost = '';
-			this.tabSet = false;
-		}
+        /**
+         * Creates basic properties for tab state.
+         */
+        constructor() {
+            this.tabHost = '';
+            this.tabSet = false;
+        }
 
-		/**
-		 * Sets tabHost property to reflect new active tab.
-		 * @param host
-		 */
-		set host(host) {
-			this.tabSet = false;
-			this.tabHost = host;
-			this.seconds = 0;
-			this.tabSet = true;
-			this.startCounter();
-		}
+        /**
+         * Sets tabHost property to reflect new active tab.
+         * @param host
+         */
+        set host(host) {
+            this.tabHost = host;
+            this.tabSet = true;
+        }
 
-		/**
-		 * Gets tab state in object format for ajax request.
-		 * @returns {{host: (string|*), seconds: number}}
-		 */
-		get activeTab() {
-			return {
-				host:    this.tabHost,
-				seconds: this.seconds,
-			}
-		}
+        /**
+         * Gets tab state in object format for ajax request.
+         * @returns {{host: (string|*), seconds: number}}
+         */
+        get tab() {
+            return {
+                host: this.tabHost,
+                seconds: this.seconds,
+            }
+        }
 
-		/**
-		 * Callback for onActivated requests active tabs host name on new active tab.
-		 * @param {object} tab - object containing tab id and window id.
-		 */
-		activateHandler(tab) {
-			// Message to send to content.js
-			let msg = {
-				message: 'host'
-			};
+        /**
+         * Callback for onActivated requests active tabs host name on new active tab.
+         * @param {object} tab - object containing tab id and window id.
+         */
+        activateHandler(tab) {
+            // Message to send to content.js
+            let msg = {
+                message: 'host'
+            };
 
-			sendMessage(tab.tabId, msg, res => {
-				if (!this.tabSet) {
-					this.host = res.host;
-				} else {
-					this.saveTab(this.activeTab);
-					this.host = res.host;
-				}
-			});
-		}
+            // sendMessage(tab.tabId, msg, res => {
+            //     if (!this.tabSet) {
+            //         this.host = res.host;
+            //     } else {
+            //         this.saveTab(this.tab);
+            //         this.host = res.host;
+            //     }
+            // });
+        }
+    }
 
-		saveTab(tabData) {
-			console.log(tabData);
-		}
+    class User {
+        constructor() {
+            this.email = '';
+            this.id = '';
+        }
 
-	}
+        /**
+         * Sets Users attributes.
+         * @param user
+         */
+        set user(user) {
+            this.email = user.email;
+            this.id = user.id;
+        }
+    }
 
-	class User {
-		constructor() {
-			this.email = '';
-			this.id = '';
-		}
+    class Counter {
+        constructor() {
+            this.seconds = 0;
+        }
 
-		/**
-		 * Sets Users attributes.
-		 * @param user
-		 */
-		set user(user) {
-			this.email = user.email;
-			this.id = user.id;
-		}
-	}
+        /**
+         * Callback for startCounter to increment seconds property.
+         */
+        increment() {
+            this.seconds++;
+        }
 
-	class Counter {
-		constructor() {
-			this.seconds = 0;
-		}
+        /**
+         * setInterval counter to increment seconds property every 1s, as long as
+         * property currentTabSet is true.
+         */
+        startCounter() {
+            const interval = setInterval(this.increment, 1000);
+        }
 
-		/**
-		 * Callback for startCounter to increment seconds property.
-		 */
-		increment() {
-			this.seconds++;
-		}
+        /**
+         * Removes interval process
+         */
+        stopCounter() {
+            clearInterval(interval)
+        }
+    }
 
-		/**
-		 * setInterval counter to increment seconds property every 1s, as long as
-		 * property currentTabSet is true.
-		 */
-		startCounter() {
-			const interval = setInterval(this.increment, 1000);
-		}
+    // Create new Instances of Classes.
+    const user = new User();
+    const TM = new TabManager();
+    const counter = new Counter();
 
-		/**
-		 * Removes interval process
-		 */
-		stopCounter() {
-			clearInterval(interval)
-		}
-	}
+    // Chrome API Reassignment.
+    const tabQuery = chrome.tabs.query;
+    const sendMessage = chrome.tabs.sendMessage;
 
-	// Create new Instances of Classes.
-	const user = new User();
-	const TM = new TabManager();
-	const counter = new Counter();
-
-	// Chrome API Reassignment.
-	const tabQuery = chrome.tabs.query;
-	const sendMessage = chrome.tabs.sendMessage;
-
-	// Chrome Listeners & Handlers.
-	chrome.tabs.onActivated.addListener(TM.activateHandler.bind(TM));
+    // Chrome Listeners & Handlers.
+    chrome.tabs.onActivated.addListener(TM.activateHandler.bind(TM));
 
 })();
