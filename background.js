@@ -1,9 +1,11 @@
-/**
- * Created by sean on 15/08/2016.
- */
+/** Created by sean on 15/08/2016. */
+
 (() => {
+
     // Chrome API Reassignment.
     const tabQuery = chrome.tabs.query;
+    const setStorage = chrome.storage.sync.set;
+    const getStorage = chrome.storage.sync.get;
     const sendMessage = chrome.tabs.sendMessage;
 
     // Helper functions that don't add to classes interface.
@@ -20,23 +22,15 @@
     }
 
     /**
-     * Saves object into users local machine.
-     * @param {object} obj
-     */
-    function storageSave(obj) {
-        chrome.storage.sync.set(obj)
-    }
-
-    /**
      * Generates Token, saves it and returns it.
      * @returns {string} value of gen'd token.
      */
     function genToken() {
         let token = uuid.v4();
-        storageSave({
+        setStorage({
             'WTA_TOKEN': token
         });
-        return token
+        return token;
     }
 
 
@@ -47,8 +41,8 @@
          * @constructor
          */
         constructor() {
-            let _token = this.token;
-            this.uid = isEmptyObject(_token) ? genToken() : _token;
+            this.uid = '';
+            this.getOrCreate();
         }
 
         /**
@@ -62,11 +56,12 @@
         }
 
         /**
-         * Returns token stored in chrome storage.
-         * @returns {*} the value of token or empty object.
+         * Gets or creates new uid token.
          */
-        get token() {
-            return chrome.storage.sync.get('WTA_TOKEN', token => token)
+        getOrCreate() {
+            getStorage('WTA_TOKEN', obj => {
+                this.uid = isEmptyObject(obj) ? genToken() : obj.WTA_TOKEN;
+            });
         }
     }
 
@@ -155,7 +150,7 @@
              * onActivated callback.
              * @param {object} tab - object containing tab id and window id.
              */
-            this.activateHandler = tab => {
+            this.onActivated = tab => {
                 let msg = {
                     message: 'host'
                 };
@@ -163,13 +158,13 @@
                 sendMessage(tab.tabId, msg, res => {
                     console.log(res);
                 });
-            }
+            };
         }
     }
 
-    // Create new Instances of Classes.
+    // Create new Instances of Manager.
     const BGM = new BackgroundManager();
 
     // Chrome Listeners & Handlers.
-    chrome.tabs.onActivated.addListener(BGM.activateHandler);
+    chrome.tabs.onActivated.addListener(BGM.onActivated);
 })();
