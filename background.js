@@ -33,23 +33,17 @@
             this.seconds = 0;
         }
 
-        /**
-         * startCounter interval callback.
-         */
+        /** startCounter interval callback. */
         increment() {
             this.seconds++;
         }
 
-        /**
-         * Start counter interval.
-         */
+        /** Start counter interval. */
         startCounter() {
             const interval = setInterval(this.increment, 1000);
         }
 
-        /**
-         * Stops counter interval.
-         */
+        /** Stops counter interval. */
         stopCounter() {
             clearInterval(interval)
         }
