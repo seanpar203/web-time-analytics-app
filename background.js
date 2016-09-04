@@ -1,6 +1,8 @@
 /** Created by sean on 15/08/2016. */
 
 (() => {
+	// Constants
+	const BASE_URL = 'http://localhost:5000/';
 
 	// Chrome API Reassignment.
 	const tabQuery = chrome.tabs.query;
@@ -21,6 +23,18 @@
 		return Object.keys(obj).length === 0;
 	}
 
+
+	function saveData(url, data) {
+		$.ajax({
+			type:        'POST',
+			dataType:    'json',
+			data:        JSON.stringify(data),
+			url:         `${BASE_URL}${url}`,
+			contentType: "application/json; charset=utf-8",
+		})
+
+	}
+
 	/**
 	 * Generates Token, saves it and returns it.
 	 * @returns {string} value of gen'd token.
@@ -38,18 +52,9 @@
 			// Attributes
 			const _getOrCreate = () => getStorage('WTA_TOKEN', _validate);
 			const _validate = obj => isEmpty(obj) ? _saveToken() : obj.WTA_TOKEN;
+			const _saveToken = () => saveData('user/create/', {token: genToken()});
 			const _token = _getOrCreate();
 
-			/** Saves new token in db */
-			const _saveToken = () => {
-				$.ajax({
-					type: 'POST',
-					dataType: 'json',
-					url: 'http://localhost:5000/user/create/',
-					data: JSON.stringify({token: genToken()}),
-					contentType: "application/json; charset=utf-8",
-				})
-			};
 
 			// Exposed Methods.
 			/** Returns object with token value. */
@@ -69,10 +74,10 @@
 			this.state = () => ({seconds: _seconds / 60});
 
 			/** Start counter interval. */
-			this.start = () => {const interval = setInterval(_increment, 1000);};
-
-			/** Stops counter interval. */
-			this.stop = () => clearInterval(interval);
+			this.start = () => {
+				_seconds = 0;
+				const interval = setInterval(_increment, 1000);
+			};
 		}
 	}
 
@@ -85,7 +90,7 @@
 			this.setHost = (host) => _hostName = host;
 
 			/** Gets the current host name state. */
-			this.state = () => ({host: _hostName,})
+			this.state = () => ({host: _hostName})
 		}
 	}
 
@@ -96,20 +101,34 @@
 			const _token = new Token();
 			const _host = new HostName();
 			const _counter = new Counter();
+			const _getState = () => Object.assign({}, _token.state(), _host.state(), _counter.state());
+			const _saveTimeSpent = () => saveData('hello', _getState());
+
+			const _startTracking = host => {
+				_host.setHost(host);
+				_counter.start()
+			};
+
 
 			/**
 			 * onActivated callback.
 			 * @param {object} tab - object containing tab id and window id.
 			 */
 			this.onActivated = tab => {
-				let msg = {
-					message: 'host'
-				};
+				sendMessage(tab.tabId, {message: 'host'}, res => {
+					let host = _host.state();
+					console.log(host);
 
-				sendMessage(tab.tabId, msg, res => {
-					console.log(res);
+					if (host.host.length === 0) {
+						_startTracking(res.host);
+					}
+					else {
+						_saveTimeSpent();
+						_startTracking(res.host);
+					}
 				});
 			};
+
 		}
 	}
 
