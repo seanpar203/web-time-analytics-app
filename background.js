@@ -14,7 +14,7 @@
 	 * @param {object} obj
 	 * @returns {boolean}
 	 */
-	function isEmptyObject(obj) {
+	function isEmpty(obj) {
 		if (obj === undefined) {
 			return true;
 		}
@@ -34,23 +34,22 @@
 
 	/** Class Representing Token State */
 	class Token {
-		/**
-		 * Creates token state.
-		 * @constructor
-		 */
 		constructor() {
 			// Attributes
-			let _newUser = false;
-			let _getOrCreate = () => getStorage('WTA_TOKEN', _validateToken);
-			const _validateToken = (obj) => {
-				if (isEmptyObject(obj)) {
-					_newUser = true;
-					return genToken()
-				}
-				return obj.WTA_TOKEN;
-			};
+			const _getOrCreate = () => getStorage('WTA_TOKEN', _validate);
+			const _validate = obj => isEmpty(obj) ? _saveToken() : obj.WTA_TOKEN;
 			const _token = _getOrCreate();
 
+			/** Saves new token in db */
+			const _saveToken = () => {
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					url: 'http://localhost:5000/user/create/',
+					data: JSON.stringify({token: genToken()}),
+					contentType: "application/json; charset=utf-8",
+				})
+			};
 
 			// Exposed Methods.
 			/** Returns object with token value. */
@@ -60,10 +59,6 @@
 
 	/** Class Representing Counter State */
 	class Counter {
-		/**
-		 * Creates counter state.
-		 * @constructor
-		 */
 		constructor() {
 			// Attributes
 			let _seconds = 0;
@@ -83,11 +78,6 @@
 
 	/** Class Representing host name State */
 	class HostName {
-
-		/**
-		 * Creates host name state.
-		 * @constructor
-		 */
 		constructor() {
 			let _hostName = '';
 
@@ -102,15 +92,10 @@
 
 	/** Master Class Representing Main Interface. */
 	class BackgroundManager {
-
-		/**
-		 * Creates background state.
-		 * @constructor
-		 */
 		constructor() {
-			let _host = new HostName();
-			let _token = new Token();
-			let _counter = new Counter();
+			const _token = new Token();
+			const _host = new HostName();
+			const _counter = new Counter();
 
 			/**
 			 * onActivated callback.
