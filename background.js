@@ -3,6 +3,10 @@
 (() => {
 	// Constants
 	const BASE_URL = 'http://localhost:5000/';
+	const TAB_QUERY_CONFIG = {
+		active:        true,
+		currentWindow: true
+	};
 
 	// Chrome API Reassignment.
 	const tabQuery = chrome.tabs.query;
@@ -36,6 +40,22 @@
 	}
 
 	/**
+	 * http://www.primaryobjects.com/2012/11/19/parsing-hostname-and-domain-from-a-url-with-javascript/
+	 * Returns host name from string url.
+	 * @param url - Value of entire url.
+	 * @returns {*} - Value of host name.
+	 */
+	function getHostName(url) {
+		var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
+		if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {
+			return match[2];
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
 	 * Generates Token, saves it and returns it.
 	 * @returns {string} value of gen'd token.
 	 */
@@ -50,15 +70,15 @@
 	class Token {
 		constructor() {
 			// Attributes
-			const _getOrCreate = () => getStorage('WTA_TOKEN', _validate);
-			const _validate = obj => isEmpty(obj) ? _saveToken() : obj.WTA_TOKEN;
-			const _saveToken = () => saveData('user/create/', {token: genToken()});
-			const _token = _getOrCreate();
-
+			let _token;
 
 			// Exposed Methods.
 			/** Returns object with token value. */
 			this.state = () => ({token: _token});
+
+			getStorage('WTA_TOKEN', obj => {
+				_token = isEmpty(obj) ? genToken() : obj.WTA_TOKEN
+			});
 		}
 	}
 
@@ -67,17 +87,23 @@
 		constructor() {
 			// Attributes
 			let _seconds = 0;
-			const _increment = () => _seconds++;
+			let _interval;
 
 			// Exposed Methods.
 			/** Returns object with minutes value. */
-			this.state = () => ({seconds: _seconds / 60});
+			this.state = () => ({seconds: _seconds});
 
 			/** Start counter interval. */
 			this.start = () => {
-				_seconds = 0;
-				const interval = setInterval(_increment, 1000);
+				_interval = setInterval(() => {
+					_seconds++
+				}, 1000);
 			};
+
+			this.stop = () => {
+				clearInterval(_interval);
+				_seconds = 0;
+			}
 		}
 	}
 
@@ -88,6 +114,8 @@
 
 			/** Sets new host name state. */
 			this.setHost = (host) => _hostName = host;
+
+			this.len = () => _hostName.length;
 
 			/** Gets the current host name state. */
 			this.state = () => ({host: _hostName})
@@ -101,12 +129,19 @@
 			const _token = new Token();
 			const _host = new HostName();
 			const _counter = new Counter();
-			const _getState = () => Object.assign({}, _token.state(), _host.state(), _counter.state());
 			const _saveTimeSpent = () => saveData('hello', _getState());
+			const _getState = () => Object.assign({}, _token.state(), _host.state(), _counter.state());
 
-			const _startTracking = host => {
-				_host.setHost(host);
+			const _startTracking = hostName => {
+				_host.setHost(hostName);
 				_counter.start()
+			};
+
+			const _saveAndStart = hostName => {
+				console.log(_getState());
+				_counter.stop();
+				_saveTimeSpent();
+				_startTracking(hostName);
 			};
 
 
@@ -115,20 +150,13 @@
 			 * @param {object} tab - object containing tab id and window id.
 			 */
 			this.onActivated = tab => {
-				sendMessage(tab.tabId, {message: 'host'}, res => {
-					let host = _host.state();
-					console.log(host);
-
-					if (host.host.length === 0) {
-						_startTracking(res.host);
-					}
-					else {
-						_saveTimeSpent();
-						_startTracking(res.host);
-					}
+				tabQuery(TAB_QUERY_CONFIG, tabs => {
+					let hostName = getHostName(tabs[0].url);
+					_host.len() === 0
+						? _startTracking(hostName)
+						: _saveAndStart(hostName);
 				});
 			};
-
 		}
 	}
 
