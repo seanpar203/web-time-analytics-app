@@ -1,0 +1,44 @@
+{
+  "time_spent": [
+	{
+	  "label": "facebook.com",
+	  "value": 264131,
+	  "color": "#2484c1"
+	},
+	{
+	  "label": "linkedin.com",
+	  "value": 218812,
+	  "color": "#0c6197"
+	},
+	{
+	  "label": "google.com",
+	  "value": 157618,
+	  "color": "#4daa4b"
+	},
+	{
+	  "label": "gmail.com",
+	  "value": 114384,
+	  "color": "#90c469"
+	},
+	{
+	  "label": "reddit.com",
+	  "value": 95002,
+	  "color": "#daca61"
+	},
+	{
+	  "label": "twitter.com",
+	  "value": 78327,
+	  "color": "#e4a14b"
+	},
+	{
+	  "label": "instagram.com",
+	  "value": 67706,
+	  "color": "#e98125"
+	},
+	{
+	  "label": "wikipedia.com",
+	  "value": 36344,
+	  "color": "#cb2121"
+	}
+  ]
+}
