@@ -2,7 +2,7 @@
 
 (() => {
 	// Constants
-	const BASE_URL = 'http://localhost:5000/';
+	const BASE_URL = 'http://localhost:5000/api/';
 	const TAB_QUERY_CONFIG = {
 		active:        true,
 		currentWindow: true
@@ -33,7 +33,7 @@
 			type:        'POST',
 			dataType:    'json',
 			data:        JSON.stringify(data),
-			url:         `${BASE_URL}${url}`,
+			url:         `${BASE_URL}${url}/`,
 			contentType: "application/json; charset=utf-8",
 		})
 
@@ -129,7 +129,7 @@
 			const _token = new Token();
 			const _host = new HostName();
 			const _counter = new Counter();
-			const _saveTimeSpent = () => saveData('hello', _getState());
+			const _saveTimeSpent = () => saveData('time', _getState());
 			const _getState = () => Object.assign({}, _token.state(), _host.state(), _counter.state());
 
 			const _startTracking = hostName => {
