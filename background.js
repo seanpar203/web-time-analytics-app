@@ -127,7 +127,7 @@ $(() => {
 			const _saveTimeSpent = () => saveData('time/', _getState(), _token.state().token);
 
 			/** Gets all the objects current state */
-			const _getState = () => Object.assign({}, _token.state(), _host.state(), _counter.state());
+			const _getState = () => Object.assign({}, _host.state(), _counter.state());
 
 			/** Start tracking time spent. */
 			const _startTracking = hostName => {
