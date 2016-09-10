@@ -45,11 +45,12 @@ $(() => {
 
 
 	/** Generic Save Data Methods */
-	function saveData(url, data) {
+	function saveData(url, data, token) {
 		$.ajax({
 			type:        'POST',
 			url:         `${BASE_URL}${url}`,
 			data:        JSON.stringify(data),
+			headers:     {'Authorization': token},
 			dataType:    'json',
 			contentType: "application/json",
 		})
@@ -123,7 +124,7 @@ $(() => {
 			const _counter = new Counter();
 
 			/** Saves Date to DB. */
-			const _saveTimeSpent = () => saveData('time/', _getState());
+			const _saveTimeSpent = () => saveData('time/', _getState(), _token.state().token);
 
 			/** Gets all the objects current state */
 			const _getState = () => Object.assign({}, _token.state(), _host.state(), _counter.state());
@@ -136,8 +137,8 @@ $(() => {
 
 			/** Saves & starts tracking */
 			const _saveAndStart = hostName => {
-				_counter.stop();
 				_saveTimeSpent();
+				_counter.stop();
 				_startTracking(hostName);
 			};
 
