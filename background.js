@@ -159,6 +159,10 @@ $(() => {
 						: _saveAndStart(hostName);
 				});
 			};
+
+			this.onMessage = (req, sender, res) => {
+				res(_token.state())
+			}
 		}
 	}
 
@@ -167,4 +171,5 @@ $(() => {
 
 	// Chrome Listeners & Handlers.
 	chrome.tabs.onActivated.addListener(BGM.onActivated);
+	chrome.extension.onMessage.addListener(BGM.onMessage);
 });
