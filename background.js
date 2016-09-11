@@ -2,7 +2,7 @@
 
 $(() => {
 	// Constants
-	const BASE_URL = 'http://localhost:5000/api/';
+	const BASE_URL = 'http://localhost:5000/api';
 	const TAB_QUERY_CONFIG = {
 		active:        true,
 		currentWindow: true
@@ -124,7 +124,7 @@ $(() => {
 			const _counter = new Counter();
 
 			/** Saves Date to DB. */
-			const _saveTimeSpent = () => saveData('time/', _getState(), _token.state().token);
+			const _saveTimeSpent = () => saveData('/time', _getState(), _token.state().token);
 
 			/** Gets all the objects current state */
 			const _getState = () => Object.assign({}, _host.state(), _counter.state());
