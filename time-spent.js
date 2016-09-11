@@ -26,33 +26,12 @@ $(() => {
 
 	function handleSucces(res) {
 		const pie = new d3pie("pieChart", {
-			"header":   {
-				"title":                {
-					"text":     "Your time spent on the web.",
-					"fontSize": 24,
-					"font":     "open sans"
-				},
-				"subtitle":             {
-					"text":     "A pie chart representing your time spent on the web.",
-					"color":    "#999999",
-					"fontSize": 12,
-					"font":     "open sans"
-				},
-				"titleSubtitlePadding": 9
-			},
-			"footer":   {
-				"color":    "#999999",
-				"fontSize": 10,
-				"font":     "open sans",
-				"location": "bottom-left"
-			},
 			"size":     {
-				"canvasWidth":    590,
-				"pieOuterRadius": "90%"
+				"pieOuterRadius": "100%"
 			},
 			"data":     {
 				"sortOrder": "value-desc",
-				"content":   res
+				"content":   res.data
 			},
 			"labels":   {
 				"outer":      {
@@ -62,7 +41,7 @@ $(() => {
 					"hideWhenLessThanPercentage": 3
 				},
 				"mainLabel":  {
-					"fontSize": 11
+					"fontSize": 12
 				},
 				"percentage": {
 					"color":         "#ffffff",
@@ -98,5 +77,19 @@ $(() => {
 				}
 			}
 		});
+
+		let total_elapsed = 0;
+		res.data.forEach(data => total_elapsed += data.value);
+
+		res.data.forEach(data => {
+			$('tbody').append(
+				'<tr>' +
+					'<td style="background-color: '+ data.color +'">'+ '</td>'+
+					'<td>' + data.label + '</td>' +
+					'<td>' + Math.round(data.value / 60) + '</td>'+
+					'<td>' + Math.round(data.value / total_elapsed * 100) + '</td>'+
+				'</tr>'
+			)
+		})
 	}
 });
