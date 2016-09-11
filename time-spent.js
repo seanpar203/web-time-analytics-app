@@ -27,6 +27,8 @@ $(() => {
 	function handleSucces(res) {
 		const pie = new d3pie("pieChart", {
 			"size":     {
+				"canvasWidth": 300,
+				"canvasHeight": 300,
 				"pieOuterRadius": "100%"
 			},
 			"data":     {
@@ -57,11 +59,6 @@ $(() => {
 				"truncation": {
 					"enabled": true
 				}
-			},
-			"tooltips": {
-				"enabled": true,
-				"type":    "placeholder",
-				"string":  "{value} minutes on {label}."
 			},
 			"effects":  {
 				"pullOutSegmentOnClick": {
