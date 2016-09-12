@@ -14,14 +14,11 @@ $(() => {
 
 	// Returns whether a object has keys or not.
 	function isEmpty(obj) {
-		if (obj === undefined) {
-			return true;
-		}
-		return Object.keys(obj).length === 0;
+		return obj === undefined ? true : Object.keys(obj).length === 0
 	}
 
-	 // Returns host name from string url.
-	 // http://www.primaryobjects.com/2012/11/19/parsing-hostname-and-domain-from-a-url-with-javascript/
+	// Returns host name from string url.
+	// http://www.primaryobjects.com/2012/11/19/parsing-hostname-and-domain-from-a-url-with-javascript/
 	function getHostName(url) {
 		var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
 		if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {
@@ -43,11 +40,11 @@ $(() => {
 	// Generic Save Data Method.
 	function saveData(url, data, token) {
 		$.ajax({
-			type:        'POST',
-			url:         `${BASE_URL}${url}`,
-			data:        JSON.stringify(data),
-			headers:     {'Authorization': token},
-			dataType:    'json',
+			type: 'POST',
+			url: `${BASE_URL}${url}`,
+			data: JSON.stringify(data),
+			headers: {'Authorization': token},
+			dataType: 'json',
 			contentType: "application/json",
 		})
 	}
@@ -86,7 +83,7 @@ $(() => {
 			// Returns object with token value.
 			this.state = () => ({token: _token});
 
-			// Gets or creates Token
+			// Gets or creates Token.
 			getStorage('WTA_TOKEN', obj => _token = isEmpty(obj) ? genToken() : obj.WTA_TOKEN);
 		}
 	}
@@ -101,13 +98,13 @@ $(() => {
 
 			/** Private Methods. */
 
-			// Starts counter.
+				// Starts counter.
 			const _startCounter = () => {
-				_interval = setInterval(() => {
-					console.log(_seconds);
-					_seconds++
-				}, 1000);
-			};
+					_interval = setInterval(() => {
+						console.log(_seconds);
+						_seconds++
+					}, 1000);
+				};
 
 
 			/** Exposed Methods. */
@@ -128,7 +125,7 @@ $(() => {
 				clearInterval(_interval);
 			};
 
-			// Adds new interval to continue counter
+			// Adds new interval to continue counter.
 			this.continue = () => {
 				_counting = true;
 				_startCounter();
@@ -141,7 +138,7 @@ $(() => {
 				this.stop();
 			};
 
-			// Returns boolean value of counting
+			// Returns boolean value of counting.
 			this.isCounting = () => {
 				return _counting;
 			}
@@ -175,10 +172,10 @@ $(() => {
 
 			/** Private Methods. */
 
-			// Saves Date to DB.
-			const _saveTimeSpent = () => saveData('/time', _getState(), _token.state().token);
+				// Saves Data to DB.
+			const _saveTime = () => saveData('/time', _getState(), _token.state().token);
 
-			// Gets all the objects current state
+			// Gets all the objects current state.
 			const _getState = () => Object.assign({}, _host.state(), _counter.state());
 
 			// Start tracking time spent.
@@ -187,34 +184,32 @@ $(() => {
 				_counter.start()
 			};
 
-			// Saves & starts tracking
+			// Saves & starts tracking.
 			const _saveAndStart = hostName => {
 				if (_counter.isCounting()) {
 					_counter.stop();
 				}
-				_saveTimeSpent();
+				_saveTime();
 				_startTracking(hostName);
 			};
 
 
 			/** Exposed Methods. */
 
-			// onActivated callback
+			// onActivated callback.
 			this.onActivated = tab => {
 				tabQuery({active: true, currentWindow: true}, tabs => {
 					let hostName = getHostName(tabs[0].url);
-					_host.len() === 0
-						? _startTracking(hostName)
-						: _saveAndStart(hostName);
+					_host.len() === 0 ? _startTracking(hostName) : _saveAndStart(hostName);
 				});
 			};
 
-			// On Message callback, sends token
+			// OnMessage callback.
 			this.onMessage = (req, sender, res) => {
 				res(_token.state())
 			};
 
-			// State change call back.
+			// StateChange callback.
 			this.onStateChanged = state => {
 				if (state == 'idle' || state == 'locked') {
 					_counter.minusAndStop(15);
@@ -228,7 +223,7 @@ $(() => {
 
 	/** Kick Off. */
 
-	// Create new Instances of Manager.
+		// Create new Instances of Manager.
 	const BGM = new BackgroundManager();
 
 	// Set Idle Detection.
