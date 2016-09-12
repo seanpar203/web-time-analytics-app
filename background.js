@@ -36,7 +36,6 @@ $(() => {
 		return token;
 	}
 
-
 	// Generic Save Data Method.
 	function saveData(url, data, token) {
 		$.ajax({
@@ -98,7 +97,7 @@ $(() => {
 
 			/** Private Methods. */
 
-				// Starts counter.
+			// Starts counter.
 			const _startCounter = () => {
 					_interval = setInterval(() => {
 						console.log(_seconds);
@@ -172,7 +171,7 @@ $(() => {
 
 			/** Private Methods. */
 
-				// Saves Data to DB.
+			// Saves Data to DB.
 			const _saveTime = () => saveData('/time', _getState(), _token.state().token);
 
 			// Gets all the objects current state.
@@ -223,7 +222,7 @@ $(() => {
 
 	/** Kick Off. */
 
-		// Create new Instances of Manager.
+	// Create new Instances of Manager.
 	const BGM = new BackgroundManager();
 
 	// Set Idle Detection.
