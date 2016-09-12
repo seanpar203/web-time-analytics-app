@@ -1,40 +1,50 @@
 <!DOCTYPE html>
 <html lang='en'>
-<head>
-	<meta charset='UTF-8'>
-	<title>Web Time Spent.</title>
-	<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
-	<link rel='stylesheet' href='time-spent.css'>
-	<script src='jquery-3.1.0.min.js'></script>
-	<script src='d3.min.js'></script>
-	<script src='d3pie.min.js'></script>
-</head>
-<body>
+	<head>
+		<meta charset='UTF-8'>
+		<title>Web Time Spent.</title>
+		<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+		<link rel='stylesheet' href='time-spent.css'>
+		<script src='jquery-3.1.0.min.js'></script>
+		<script src='d3.min.js'></script>
+		<script src='d3pie.min.js'></script>
+	</head>
+	<body>
 
-<h1 class='text-center'>Your Time Spent on the Web.</h1>
+		<header class='text-center'>
+			<h1>Your Time Spent on the Web.</h1>
+			<h4>You've spent
+				<span id='larger-amount'></span>
+				<span id='larger-amount-name'></span>,
+				<span id='smaller-amount'></span>
+				<span id='smaller-amount-name'></span>
+			    on the web today.
+			</h4>
+		</header>
 
-<div class='container'>
-	<div class='row'>
-		<div class='col-xs-12 col-sm-6 text-center'>
-			<div id='pieChart'></div>
+		<div class='container'>
+			<div class='row'>
+
+				<div class='col-xs-12 col-sm-6 text-center'>
+					<div id='pieChart'></div>
+				</div>
+
+				<div class='col-xs-12 col-sm-6'>
+					<table class='table table-striped table-responsive' id='#pie-chart-table'>
+						<thead>
+							<tr>
+								<th>Color</th>
+								<th>Website</th>
+								<th>Minutes</th>
+								<th>Percentage</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
-
-		<div class='col-xs-12 col-sm-6'>
-			<table class='table table-striped' id='#pie-chart-table'>
-				<thead>
-				<tr>
-					<th>Color</th>
-					<th>Website</th>
-					<th>Minutes</th>
-					<th>Percentage</th>
-				</tr>
-				</thead>
-				<tbody>
-				</tbody>
-			</table>
-		</div>
-	</div>
-</div>
-<script src='time-spent.js'></script>
-</body>
+		<script src='time-spent.js'></script>
+	</body>
 </html>
