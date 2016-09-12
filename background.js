@@ -1,21 +1,18 @@
 /** Created by sean on 15/08/2016. */
 
 $(() => {
-	// Constants
+	/** Sensible Constants */
 	const BASE_URL = 'http://localhost:5000/api';
-	const TAB_QUERY_CONFIG = {
-		active:        true,
-		currentWindow: true
-	};
 
 	// Chrome API Reassignment.
 	const tabQuery = chrome.tabs.query;
 	const setStorage = chrome.storage.sync.set;
 	const getStorage = chrome.storage.sync.get;
 
-	// Helper functions that don't add to classes interface.
 
-	/** Returns whether a object has keys or not. */
+	/** Helper functions that don't add to classes interface. */
+
+	// Returns whether a object has keys or not.
 	function isEmpty(obj) {
 		if (obj === undefined) {
 			return true;
@@ -23,10 +20,8 @@ $(() => {
 		return Object.keys(obj).length === 0;
 	}
 
-	/**
-	 * Returns host name from string url.
-	 * http://www.primaryobjects.com/2012/11/19/parsing-hostname-and-domain-from-a-url-with-javascript/
-	 */
+	 // Returns host name from string url.
+	 // http://www.primaryobjects.com/2012/11/19/parsing-hostname-and-domain-from-a-url-with-javascript/
 	function getHostName(url) {
 		var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
 		if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {
@@ -37,7 +32,7 @@ $(() => {
 		}
 	}
 
-	/** Generates Token, saves it and returns it. */
+	// Generates Token, saves it and returns it.
 	function genToken() {
 		let token = uuid.v4();
 		setStorage({'WTA_TOKEN': token});
@@ -45,7 +40,7 @@ $(() => {
 	}
 
 
-	/** Generic Save Data Methods */
+	// Generic Save Data Methods
 	function saveData(url, data, token) {
 		$.ajax({
 			type:        'POST',
@@ -57,31 +52,56 @@ $(() => {
 		})
 	}
 
+	/**
+	 * Classes below provide the main functionality.
+	 *
+	 * ~ Token
+	 * ---------------------------------------------
+	 * Provides unique identification for each user.
+	 *
+	 *
+	 * ~ Counter
+	 * ---------------------------------------------
+	 * Manages active time spent on current tab.
+	 *
+	 *
+	 * ~ HostName
+	 * ---------------------------------------------
+	 * Manages host name of active current tab.
+	 *
+	 *
+	 * ~ BackgroundManager
+	 * ---------------------------------------------
+	 * Provides the main interface for interactions.
+	 */
 
-	/** Class Representing Token State */
+
 	class Token {
 		constructor() {
-			// Attributes
+			/** Attributes */
 			let _token;
 
-			// Exposed Methods.
-			/** Returns object with token value. */
+			/** Exposed Methods. */
+
+			// Returns object with token value.
 			this.state = () => ({token: _token});
 
-			/** Gets or creates Token */
+			// Gets or creates Token
 			getStorage('WTA_TOKEN', obj => _token = isEmpty(obj) ? genToken() : obj.WTA_TOKEN);
 		}
 	}
 
-	/** Class Representing Counter State */
 	class Counter {
 		constructor() {
-			// Attributes.
+
+			/** Attributes. */
 			let _seconds = 0;
 			let _interval;
 			let _counting = false;
 
-			/** Start counter Methods. */
+			/** Private Methods. */
+
+			// Starts counter.
 			const _startCounter = () => {
 				_interval = setInterval(() => {
 					console.log(_seconds);
@@ -90,60 +110,62 @@ $(() => {
 			};
 
 
-			// Exposed Methods.
-			/** Returns object with minutes value. */
+			/** Exposed Methods. */
+
+			// Returns object with minutes value.
 			this.state = () => ({seconds: _seconds});
 
-			/** Start counter interval. */
+			// Start counter interval from 0.
 			this.start = () => {
 				_seconds = 0;
 				_counting = true;
 				_startCounter();
 			};
 
-			/** Clears interval & rests seconds */
+			// Clears interval.
 			this.stop = () => {
 				_counting = false;
 				clearInterval(_interval);
 			};
 
-			/** Adds new interval to continue counter */
+			// Adds new interval to continue counter
 			this.continue = () => {
 				_counting = true;
 				_startCounter();
 			};
 
-			/** Removed amount in seconds & stops counter. */
+			// Remove amount in seconds & stops counter.
 			this.minusAndStop = (seconds) => {
 				_seconds -= seconds;
 				_counting = false;
 				this.stop();
 			};
 
-			/** Returns boolean value of counting */
+			// Returns boolean value of counting
 			this.isCounting = () => {
 				return _counting;
 			}
 		}
 	}
 
-	/** Class Representing HostName State */
 	class HostName {
 		constructor() {
+			/** Attributes */
 			let _hostName = '';
 
-			/** Sets new host name state. */
+			/** Exposed Methods */
+
+			// Sets new host name state.
 			this.setHost = (host) => _hostName = host;
 
+			// Returns length of host name.
 			this.len = () => _hostName.length;
 
-			/** Gets the current host name state. */
+			// Gets the current host name state.
 			this.state = () => ({host: _hostName})
 		}
 	}
 
-
-	/** Master Class Representing Main Interface. */
 	class BackgroundManager {
 		constructor() {
 			/** Instances. */
@@ -151,19 +173,21 @@ $(() => {
 			const _host = new HostName();
 			const _counter = new Counter();
 
-			/** Saves Date to DB. */
+			/** Private Methods. */
+
+			// Saves Date to DB.
 			const _saveTimeSpent = () => saveData('/time', _getState(), _token.state().token);
 
-			/** Gets all the objects current state */
+			// Gets all the objects current state
 			const _getState = () => Object.assign({}, _host.state(), _counter.state());
 
-			/** Start tracking time spent. */
+			// Start tracking time spent.
 			const _startTracking = hostName => {
 				_host.setHost(hostName);
 				_counter.start()
 			};
 
-			/** Saves & starts tracking */
+			// Saves & starts tracking
 			const _saveAndStart = hostName => {
 				if (_counter.isCounting()) {
 					_counter.stop();
@@ -173,16 +197,11 @@ $(() => {
 			};
 
 
-			/** onActivated callback
-			 *
-			 * Notes:
-			 *    Gets active tab.
-			 *    Checks if there is a previous active tab.
-			 *    Saves and sets new tab if (2) is true.
-			 *    Sets new host name and starts counter.
-			 */
+			/** Private Methods. */
+
+			// onActivated callback
 			this.onActivated = tab => {
-				tabQuery(TAB_QUERY_CONFIG, tabs => {
+				tabQuery({active: true, currentWindow: true}, tabs => {
 					let hostName = getHostName(tabs[0].url);
 					_host.len() === 0
 						? _startTracking(hostName)
@@ -190,12 +209,12 @@ $(() => {
 				});
 			};
 
-			/** On Message callback, sends token */
+			// On Message callback, sends token
 			this.onMessage = (req, sender, res) => {
 				res(_token.state())
 			};
 
-			/** State change call back. */
+			// State change call back.
 			this.onStateChanged = state => {
 				if (state == 'idle' || state == 'locked') {
 					_counter.minusAndStop(15);
@@ -206,6 +225,8 @@ $(() => {
 			}
 		}
 	}
+
+	/** Kick Off. */
 
 	// Create new Instances of Manager.
 	const BGM = new BackgroundManager();
