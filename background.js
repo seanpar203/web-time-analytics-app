@@ -14,6 +14,7 @@ $(() => {
 	const getStorage = chrome.storage.sync.get;
 
 	// Helper functions that don't add to classes interface.
+
 	/** Returns whether a object has keys or not. */
 	function isEmpty(obj) {
 		if (obj === undefined) {
@@ -78,6 +79,15 @@ $(() => {
 			// Attributes.
 			let _seconds = 0;
 			let _interval;
+			let _counting = false;
+
+			/** Start counter Methods. */
+			const _startCounter = () => {
+				_interval = setInterval(() => {
+					console.log(_seconds);
+					_seconds++
+				}, 1000);
+			};
 
 
 			// Exposed Methods.
@@ -86,15 +96,33 @@ $(() => {
 
 			/** Start counter interval. */
 			this.start = () => {
-				_interval = setInterval(() => {
-					_seconds++
-				}, 1000);
+				_seconds = 0;
+				_counting = true;
+				_startCounter();
 			};
 
 			/** Clears interval & rests seconds */
 			this.stop = () => {
+				_counting = false;
 				clearInterval(_interval);
-				_seconds = 0;
+			};
+
+			/** Adds new interval to continue counter */
+			this.continue = () => {
+				_counting = true;
+				_startCounter();
+			};
+
+			/** Removed amount in seconds & stops counter. */
+			this.minusAndStop = (seconds) => {
+				_seconds -= seconds;
+				_counting = false;
+				this.stop();
+			};
+
+			/** Returns boolean value of counting */
+			this.isCounting = () => {
+				return _counting;
 			}
 		}
 	}
@@ -137,8 +165,10 @@ $(() => {
 
 			/** Saves & starts tracking */
 			const _saveAndStart = hostName => {
+				if (_counter.isCounting()) {
+					_counter.stop();
+				}
 				_saveTimeSpent();
-				_counter.stop();
 				_startTracking(hostName);
 			};
 
@@ -160,8 +190,19 @@ $(() => {
 				});
 			};
 
+			/** On Message callback, sends token */
 			this.onMessage = (req, sender, res) => {
 				res(_token.state())
+			};
+
+			/** State change call back. */
+			this.onStateChanged = state => {
+				if (state == 'idle' || state == 'locked') {
+					_counter.minusAndStop(15);
+				}
+				else if (state == 'active') {
+					_counter.continue();
+				}
 			}
 		}
 	}
@@ -169,7 +210,11 @@ $(() => {
 	// Create new Instances of Manager.
 	const BGM = new BackgroundManager();
 
+	// Set Idle Detection.
+	chrome.idle.setDetectionInterval(15);
+
 	// Chrome Listeners & Handlers.
 	chrome.tabs.onActivated.addListener(BGM.onActivated);
 	chrome.extension.onMessage.addListener(BGM.onMessage);
+	chrome.idle.onStateChanged.addListener(BGM.onStateChanged);
 });
