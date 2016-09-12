@@ -3,6 +3,9 @@
 	text-overflow: ellipsis;
 }
 
+header {
+	display: none;
+}
 .table {
 	display: none;
 }
