@@ -100,7 +100,6 @@ $(() => {
 			// Starts counter.
 			const _startCounter = () => {
 					_interval = setInterval(() => {
-						console.log(_seconds);
 						_seconds++
 					}, 1000);
 				};
