@@ -40,7 +40,7 @@ $(() => {
 	}
 
 
-	// Generic Save Data Methods
+	// Generic Save Data Method.
 	function saveData(url, data, token) {
 		$.ajax({
 			type:        'POST',
@@ -197,7 +197,7 @@ $(() => {
 			};
 
 
-			/** Private Methods. */
+			/** Exposed Methods. */
 
 			// onActivated callback
 			this.onActivated = tab => {
