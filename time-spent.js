@@ -75,8 +75,8 @@ $(() => {
 			}
 		});
 
-		let total_elapsed = 0;
-		res.data.forEach(data => total_elapsed += data.value);
+		let totalElapsed = 0;
+		res.data.forEach(data => totalElapsed += data.value);
 
 		res.data.forEach(data => {
 			$('tbody').append(
@@ -84,12 +84,41 @@ $(() => {
 					'<td style="background-color: '+ data.color +'">'+ '</td>'+
 					'<td>' + data.label + '</td>' +
 					'<td>' + Math.round(data.value / 60) + '</td>'+
-					'<td>' + Math.round(data.value / total_elapsed * 100) + '</td>'+
+					'<td>' + Math.round(data.value / totalElapsed * 100) + '</td>'+
 				'</tr>'
 			)
 		});
 
 		$('.table.table-striped').fadeIn(1000);
+		$('header').fadeIn(1000);
+
+		function totalTimeSpent() {
+			let largerName;
+			let largerAmount;
+			let smallerName;
+			let smallerAmount;
+
+			if(totalElapsed >= 3600) {
+				largerName = 'Hours';
+				smallerName = 'Minutes';
+				let totalFloat = totalElapsed / 60 / 60;
+				largerAmount = Math.floor(totalElapsed / 60 / 60);
+				smallerAmount = Math.round(+totalFloat.toFixed(2).split('.')[1] * 60 / 100);
+
+			} else {
+				largerName = 'Minutes';
+				smallerName = 'Seconds';
+				let totalFloat = totalElapsed / 60;
+				largerAmount = Math.floor(totalElapsed / 60);
+				smallerAmount = Math.round(+totalFloat.toFixed(2).split('.')[1] * 60 / 100);
+			}
+			$('#larger-amount-name').html(largerName);
+			$('#smaller-amount-name').html(smallerName);
+			$('#larger-amount').html(Math.floor(largerAmount));
+			$('#smaller-amount').html(Math.floor(smallerAmount));
+		}
+
+		totalTimeSpent();
 	}
 
 	function addAxesAndLegend (svg, xAxis, yAxis, margin, chartWidth, chartHeight) {
