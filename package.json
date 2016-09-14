@@ -1,0 +1,25 @@
+{
+  "name": "web-time-analytics-app",
+  "version": "1.0.0",
+  "description": "Web Time Analytics Chrome ",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seanpar203/web-time-analytics-app.git"
+  },
+  "keywords": [
+    "Chrome"
+  ],
+  "author": "Sean Parsons <me@seanpp.me> (http://seanpp.me)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/seanpar203/web-time-analytics-app/issues"
+  },
+  "homepage": "https://github.com/seanpar203/web-time-analytics-app#readme",
+  "dependencies": {
+    "semantic-ui": "^2.2.4"
+  }
+}
