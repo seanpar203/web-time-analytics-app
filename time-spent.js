@@ -1,6 +1,7 @@
 $(() => {
 	/** Sensible Constants */
 	const baseUrl = 'http://localhost:5000/api';
+	const sendMsg = chrome.extension.sendMessage;
 	let token = localStorage.getItem('WTA_TOKEN');
 	let totalElapsed = 0;
 
@@ -49,7 +50,7 @@ $(() => {
 					'<tr>' +
 						'<td style=background-color:' + data.color + '>' + '</td>' +
 						'<td>' + data.label + '</td>' +
-						'<td>' + calcTime(data.value).string + '</td>' +
+						'<td>' + calcTime(data.value).string() + '</td>' +
 						'<td>' + Math.round(data.value / totalElapsed * 100) + '</td>' +
 					'</tr>'
 				)
@@ -66,39 +67,38 @@ $(() => {
 	 * @returns {{lgName: *, lgAmnt: *, smName: *, smAmnt: *, string: string}}
 	 */
 	function calcTime(time) {
-		// Attributes.
-		let _float;
-		let _lgName;
-		let _smName;
+		/** Attributes. */
+		let float;
+		let lgName;
+		let smName;
 
-		let _lgAmnt;
-		let _smAmnt;
-
+		let lgAmnt;
+		let smAmnt;
 
 		/**
 		 * Calculates Hours & Minutes
 		 * @private
 		 */
-		const _calcHours = () => {
-			_lgName = 'Hours';
-			_smName = 'Minutes';
+		const calcHours = () => {
+			lgName = 'Hours';
+			smName = 'Minutes';
 
-			_float = (time / 60 / 60).toFixed(2);
-			_lgAmnt = Math.floor(time / 60 / 60);
-			_smAmnt = Math.round(_float.split('.')[1] * 60 / 100);
+			float = (time / 60 / 60).toFixed(2);
+			lgAmnt = Math.floor(time / 60 / 60);
+			smAmnt = Math.round(float.split('.')[1] * 60 / 100);
 		};
 
 		/**
 		 * Calculates Minutes & Seconds.
 		 * @private
 		 */
-		const _calcMinutes = () => {
-			_lgName = 'Minutes';
-			_smName = 'Seconds';
+		const calcMinutes = () => {
+			lgName = 'Minutes';
+			smName = 'Seconds';
 
-			_float = (time / 60).toFixed(2);
-			_lgAmnt = Math.floor(time / 60);
-			_smAmnt = Math.round(_float.split('.')[1] * 60 / 100);
+			float = (time / 60).toFixed(2);
+			lgAmnt = Math.floor(time / 60);
+			smAmnt = Math.round(float.split('.')[1] * 60 / 100);
 		};
 
 		/**
@@ -106,20 +106,20 @@ $(() => {
 		 * @returns {string}
 		 * @private
 		 */
-		const _calcString = () => {
-			return `${_lgAmnt} ${_lgName}, ${_smAmnt} ${_smName}`
+		const string = () => {
+			return `${lgAmnt} ${lgName}, ${smAmnt} ${smName}`
 		};
 
-		// Kick Off Conditional.
-		time >= 3600 ? _calcHours() : _calcMinutes();
+		/** Kick Off Conditional. */
+		time >= 3600 ? calcHours() : calcMinutes();
 
-		// Return calculated results.
+		/** Return calculated results. */
 		return {
-			lgName: _lgName,
-			lgAmnt: _lgAmnt,
-			smName: _smName,
-			smAmnt: _smAmnt,
-			string: _calcString()
+			lgName: lgName,
+			lgAmnt: lgAmnt,
+			smName: smName,
+			smAmnt: smAmnt,
+			string: string
 		};
 	}
 
@@ -441,11 +441,10 @@ $(() => {
 	}
 
 	else if (token == null) {
-		chrome.extension.sendMessage(
-			{request: 'token'}, res => {
-				token = res.token;
-				localStorage.setItem('WTA_TOKEN', res.token);
-				getTodaysTimeSpent();
-			});
+		sendMsg({request: 'token'}, res => {
+			token = res.token;
+			localStorage.setItem('WTA_TOKEN', res.token);
+			getTodaysTimeSpent();
+		});
 	}
 });
