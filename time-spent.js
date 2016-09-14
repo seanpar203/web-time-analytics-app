@@ -83,10 +83,9 @@ $(() => {
 			_lgName = 'Hours';
 			_smName = 'Minutes';
 
-			_float = time / 60 / 60;
+			_float = (time / 60 / 60).toFixed(2);
 			_lgAmnt = Math.floor(time / 60 / 60);
-			_smAmnt = Math.round(+_float.toFixed(2)
-					.split('.')[1] * 60 / 100);
+			_smAmnt = Math.round(_float.split('.')[1] * 60 / 100);
 		};
 
 		/**
@@ -97,10 +96,9 @@ $(() => {
 			_lgName = 'Minutes';
 			_smName = 'Seconds';
 
-			_float = time / 60;
+			_float = (time / 60).toFixed(2);
 			_lgAmnt = Math.floor(time / 60);
-			_smAmnt = Math.round(+_float.toFixed(2)
-					.split('.')[1] * 60 / 100);
+			_smAmnt = Math.round(_float.split('.')[1] * 60 / 100);
 		};
 
 		/**
@@ -115,6 +113,7 @@ $(() => {
 		// Kick Off Conditional.
 		time >= 3600 ? _calcHours() : _calcMinutes();
 
+		// Return calculated results.
 		return {
 			lgName: _lgName,
 			lgAmnt: _lgAmnt,
