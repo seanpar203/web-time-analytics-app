@@ -3,27 +3,23 @@
 	text-overflow: ellipsis;
 }
 
+#trends {
+	text-align: center;
+}
+
 header {
 	display: none;
+	margin-bottom: 25px;
 }
 .table {
 	display: none;
 }
 
-table > thead > tr th {
-	text-align: center;
-}
-
-table td {
-	max-width: 135px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	text-align: center;
-}
 
 #pieChart svg {
 	width: 300px;
 	height: 300px;
+	cursor: pointer;
 }
 
 svg:not(:root) {
