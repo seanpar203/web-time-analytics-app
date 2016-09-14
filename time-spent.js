@@ -24,7 +24,7 @@ $(() => {
 	 */
 	function handleSucces(res) {
 		// Get static json for creating pie chart.
-		d3.json('pie.json', (err, pieData) => {
+		d3.json('data/pie.json', (err, pieData) => {
 
 			// Attach Dynamic data to content.
 			pieData.data.content = res.data;
@@ -49,10 +49,16 @@ $(() => {
 			$('tbody')
 				.append(
 					'<tr>' +
-						'<td style=background-color:' + time.color + '>' + '</td>' +
-						'<td>' + time.label + '</td>' +
-						'<td>' + calcTime(time.value).string() + '</td>' +
-						'<td>' + Math.round(time.value / totalElapsed * 100) + '</td>' +
+						'<td class="collapsing">'+
+							'<div class="ui fitted slider checkbox">'+
+								'<input type="checkbox">'+
+								'<label>' + '</label> '+
+							'</div>' +
+						'</td>'+
+							'<td style=background-color:' + time.color + '>' + '</td>' +
+							'<td>' + time.label + '</td>' +
+							'<td>' + calcTime(time.value).string() + '</td>' +
+						'   <td>' + Math.round(time.value / totalElapsed * 100) + '</td>' +
 					'</tr>'
 				)
 		});
@@ -112,11 +118,11 @@ $(() => {
 
 		/** Return calculated results. */
 		return {
-			lgName: lgName,
-			lgAmnt: lgAmnt,
-			smName: smName,
-			smAmnt: smAmnt,
-			string: string
+			lgName,
+			lgAmnt,
+			smName,
+			smAmnt,
+			string,
 		};
 	}
 
@@ -342,8 +348,8 @@ $(() => {
 			    bottom: 40,
 			    left:   40
 		    },
-		    chartWidth  = svgWidth - margin.left - margin.right,
-		    chartHeight = svgHeight - margin.top - margin.bottom;
+		    chartWidth  = 750 - margin.left - margin.right,
+		    chartHeight = 500 - margin.top - margin.bottom;
 
 		var x = d3.time.scale()
 			.range([
@@ -371,6 +377,7 @@ $(() => {
 			.innerTickSize(-chartHeight)
 			.outerTickSize(0)
 			.tickPadding(10),
+
 		    yAxis = d3.svg.axis()
 			    .scale(y)
 			    .orient('left')
@@ -378,10 +385,11 @@ $(() => {
 			    .outerTickSize(0)
 			    .tickPadding(10);
 
-		var svg = d3.select('body')
+		var svg = d3.select('#trends')
 			.append('svg')
-			.attr('width', svgWidth)
-			.attr('height', svgHeight)
+			.attr('class', 'Hello')
+			.attr('width', 750)
+			.attr('height', 500)
 			.append('g')
 			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
@@ -398,7 +406,7 @@ $(() => {
 	}
 
 	var parseDate = d3.time.format('%Y-%m-%d').parse;
-	d3.json('data.json', function (error, rawData) {
+	d3.json('data/data.json', function (error, rawData) {
 		if (error) {
 			console.error(error);
 			return;
@@ -415,7 +423,7 @@ $(() => {
 			};
 		});
 
-		d3.json('markers.json', function (error, markerData) {
+		d3.json('data/markers.json', function (error, markerData) {
 			if (error) {
 				console.error(error);
 				return;
