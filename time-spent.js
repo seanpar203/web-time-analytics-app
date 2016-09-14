@@ -3,7 +3,6 @@ $(() => {
 	const baseUrl = 'http://localhost:5000/api';
 	const sendMsg = chrome.extension.sendMessage;
 	let token = localStorage.getItem('WTA_TOKEN');
-	let totalElapsed = 0;
 
 	/**
 	 * Fetch users time spent today.
@@ -41,23 +40,24 @@ $(() => {
 	 */
 	function createTable(data) {
 		// Total amount spent from data.
-		data.forEach(data => totalElapsed += data.value);
+		let totalElapsed = 0;
+		data.forEach(time => totalElapsed += time.value);
 
 		// Create rows.
-		data.forEach(data => {
+		data.forEach(time => {
 			$('tbody')
 				.append(
 					'<tr>' +
-						'<td style=background-color:' + data.color + '>' + '</td>' +
-						'<td>' + data.label + '</td>' +
-						'<td>' + calcTime(data.value).string() + '</td>' +
-						'<td>' + Math.round(data.value / totalElapsed * 100) + '</td>' +
+						'<td style=background-color:' + time.color + '>' + '</td>' +
+						'<td>' + time.label + '</td>' +
+						'<td>' + calcTime(time.value).string() + '</td>' +
+						'<td>' + Math.round(time.value / totalElapsed * 100) + '</td>' +
 					'</tr>'
 				)
 		});
 
 		// Fade in elements.
-		$('.table.table-striped').fadeIn(1000);
+		$('.table').fadeIn(1000);
 		$('header').fadeIn(1000);
 	}
 
@@ -75,10 +75,7 @@ $(() => {
 		let lgAmnt;
 		let smAmnt;
 
-		/**
-		 * Calculates Hours & Minutes
-		 * @private
-		 */
+		/** Calculates Hours & Minutes */
 		const calcHours = () => {
 			lgName = 'Hours';
 			smName = 'Minutes';
@@ -88,10 +85,7 @@ $(() => {
 			smAmnt = Math.round(float.split('.')[1] * 60 / 100);
 		};
 
-		/**
-		 * Calculates Minutes & Seconds.
-		 * @private
-		 */
+		/** Calculates Minutes & Seconds. */
 		const calcMinutes = () => {
 			lgName = 'Minutes';
 			smName = 'Seconds';
@@ -101,11 +95,7 @@ $(() => {
 			smAmnt = Math.round(float.split('.')[1] * 60 / 100);
 		};
 
-		/**
-		 * Returns string format of calc results.
-		 * @returns {string}
-		 * @private
-		 */
+		/** Returns string format of calc results. */
 		const string = () => {
 			return `${lgAmnt} ${lgName}, ${smAmnt} ${smName}`
 		};
