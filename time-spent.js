@@ -3,6 +3,7 @@ $(() => {
 	const baseUrl = 'http://localhost:5000/api';
 	const sendMsg = chrome.extension.sendMessage;
 	let token = localStorage.getItem('WTA_TOKEN');
+	let totalElapsed = 0;
 
 	/**
 	 * Fetch users time spent today.
@@ -30,17 +31,17 @@ $(() => {
 			const pie = new d3pie("pieChart", pieData);
 		});
 
-		// Create bootstrap table.
+		// Create Table, Update Header.
 		createTable(res.data);
+		updateHeader();
 	}
 
 	/**
 	 * Create a bootstrap table with dynamic data.
-	 * @param data
+	 * @param {Array} data - array of time objects.
 	 */
 	function createTable(data) {
 		// Total amount spent from data.
-		let totalElapsed = 0;
 		data.forEach(time => totalElapsed += time.value);
 
 		// Create rows.
@@ -56,8 +57,14 @@ $(() => {
 				)
 		});
 
-		// Fade in elements.
+		// Fade in Table.
 		$('.table').fadeIn(1000);
+	}
+
+
+	/** Update and fade in header */
+	function updateHeader() {
+		$('#total-time').html(calcTime(totalElapsed).string());
 		$('header').fadeIn(1000);
 	}
 
