@@ -21,5 +21,19 @@
   "homepage": "https://github.com/seanpar203/web-time-analytics-app#readme",
   "dependencies": {
     "semantic-ui": "^2.2.4"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.16.0",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-clean-css": "^2.0.12",
+    "gulp-concat": "^2.6.0",
+    "gulp-concat-css": "^2.3.0",
+    "gulp-sass": "^2.3.2",
+    "gulp-uglify": "^2.0.0",
+    "gulp-uglifyjs": "^0.6.2",
+    "pump": "^1.0.1",
+    "run-sequence": "^1.2.2"
   }
 }

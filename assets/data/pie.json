@@ -1,0 +1,49 @@
+{
+  "size": {
+	"canvasWidth": 300,
+	"canvasHeight": 300,
+	"pieOuterRadius": "100%"
+  },
+  "data": {
+	"sortOrder": "value-desc",
+	"content": []
+  },
+  "labels": {
+	"outer": {
+	  "pieDistance": 32
+	},
+	"inner": {
+	  "hideWhenLessThanPercentage": 3
+	},
+	"mainLabel": {
+	  "fontSize": 12
+	},
+	"percentage": {
+	  "color": "#ffffff",
+	  "decimalPlaces": 0
+	},
+	"value": {
+	  "color": "#adadad",
+	  "fontSize": 11
+	},
+	"lines": {
+	  "enabled": true
+	},
+	"truncation": {
+	  "enabled": true
+	}
+  },
+  "effects": {
+	"pullOutSegmentOnClick": {
+	  "effect": "linear",
+	  "speed": 400,
+	  "size": 8
+	}
+  },
+  "misc": {
+	"gradient": {
+	  "enabled": true,
+	  "percentage": 100
+	}
+  }
+}
