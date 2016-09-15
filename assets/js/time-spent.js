@@ -58,7 +58,7 @@ $(() => {
 							'<td class="color" style=background-color:' + time.color + '>' + '</td>' +
 							'<td class="website">' + time.label + '</td>' +
 							'<td class="time">' + calcTime(time.value).string() + '</td>' +
-						'   <td class="percent">' + Math.round(time.value / totalElapsed * 100) + '</td>' +
+						'<td class="percent">' + Math.round(time.value / totalElapsed * 100) + '</td>' +
 					'</tr>'
 				)
 		});
