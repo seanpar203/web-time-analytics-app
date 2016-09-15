@@ -3,12 +3,7 @@
 	<head>
 		<meta charset='UTF-8'>
 		<title>Web Time Spent.</title>
-		<link rel='stylesheet' href='semantic/dist/semantic.min.css'>
-		<link rel='stylesheet' href='time-spent.css'>
-		<script src='jquery-3.1.0.min.js'></script>
-		<script src='d3.min.js'></script>
-		<script src='d3pie.min.js'></script>
-		<script src='semantic/dist/semantic.min.js'></script>
+		<link rel='stylesheet' href='dist/app.css'>
 	</head>
 	<body>
 
@@ -24,13 +19,13 @@
 
 		<div class='ui two column stackable grid container'>
 
-			<div class='column ui center aligned'>
+			<div class='six wide column ui center aligned segment'>
 				<div id='pieChart'></div>
 			</div>
 
-			<div class='column'>
+			<div class='ten wide column'>
 
-				<table class='ui compact celled definition table' id='#pie-chart-table'>
+				<table class='ui compact celled definition table center aligned' id='#pie-chart-table'>
 					<thead>
 						<tr>
 							<th></th>
@@ -54,6 +49,6 @@
 				</div>
 			</div>
 		</div>
-		<script src='time-spent.js'></script>
+		<script src='dist/app.js'></script>
 	</body>
 </html>
