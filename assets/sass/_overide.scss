@@ -1,0 +1,3 @@
+.ui.slider.checkbox input:checked ~ .box:before, .ui.slider.checkbox input:checked ~ label:before {
+  background-color: inherit !important;
+}

@@ -1,7 +1,7 @@
 {
   "size": {
-	"canvasWidth": 300,
-	"canvasHeight": 300,
+	"canvasWidth": 200,
+	"canvasHeight": 200,
 	"pieOuterRadius": "100%"
   },
   "data": {
@@ -10,10 +10,11 @@
   },
   "labels": {
 	"outer": {
-	  "pieDistance": 32
+	  "format": "none",
+	  "pieDistance": 10
 	},
 	"inner": {
-	  "hideWhenLessThanPercentage": 3
+	  "hideWhenLessThanPercentage": 6
 	},
 	"mainLabel": {
 	  "fontSize": 12

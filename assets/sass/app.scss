@@ -6,38 +6,28 @@ header {
 #pieChart {
   overflow: hidden;
   text-overflow: ellipsis;
+  height: 100%;
 
   svg {
-	width: 300px;
-	height: 300px;
 	cursor: pointer;
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
   }
 }
-
 
 table {
   display: none;
 
-
   .website {
-	max-width: 150px;
 	overflow: hidden;
 	text-overflow: ellipsis;
-  }
-
-  .time {
-	min-width: 200px;
-  }
-
-  .percent {
-	max-width: 50px;
   }
 }
 
 #trends {
   text-align: center;
 }
-
 
 svg:not(:root) {
   overflow: overlay;
@@ -116,4 +106,10 @@ svg {
 
 .marker text {
   text-anchor: middle;
+}
+
+
+.ui.slider.checkbox input:checked ~ .box:before, .ui.slider.checkbox input:checked ~ label:before {
+  background-color: inherit !important;
+  color: inherit !important;
 }

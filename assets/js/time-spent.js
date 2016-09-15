@@ -51,8 +51,8 @@ $(() => {
 					'<tr>' +
 						'<td class="collapsing">'+
 							'<div class="ui fitted slider checkbox">'+
-								'<input type="checkbox">'+
-								'<label>' + '</label> '+
+								'<input style=background-color:' + time.color +'!important;'+'color:' + time.color + '!important' + ' type="checkbox">'+
+								'<label style=background-color:' + time.color +'!important;'+'color:' + time.color + '!important' + '>' + '</label>'+
 							'</div>' +
 						'</td>'+
 							'<td class="color" style=background-color:' + time.color + '>' + '</td>' +
