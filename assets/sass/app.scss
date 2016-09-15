@@ -113,3 +113,8 @@ svg {
   background-color: inherit !important;
   color: inherit !important;
 }
+
+.ui.checkbox input:checked~.box:after, .ui.checkbox input:checked~label:after {
+    content: '\e800';
+    background-color: inherit;
+}
