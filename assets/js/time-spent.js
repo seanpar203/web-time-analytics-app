@@ -4,6 +4,7 @@ $(() => {
 	const sendMsg = chrome.extension.sendMessage;
 	let token = localStorage.getItem('WTA_TOKEN');
 	let totalElapsed = 0;
+	const trends = [];
 
 	/**
 	 * Fetch users time spent today.
@@ -126,320 +127,106 @@ $(() => {
 		};
 	}
 
-	function addAxesAndLegend(svg, xAxis, yAxis, margin, chartWidth, chartHeight) {
-		var legendWidth  = 200,
-		    legendHeight = 100;
+	// Get the data
+	d3.json("assets/data/times.json", function(error, data) {
+		// Set the dimensions of the canvas / graph
+		var margin = {top: 30, right: 20, bottom: 70, left: 50},
+		    width = 600 - margin.left - margin.right,
+		    height = 300 - margin.top - margin.bottom;
 
-		// clipping to make sure nothing appears behind legend
-		svg.append('clipPath')
-			.attr('id', 'axes-clip')
-			.append('polygon')
-			.attr('points', (-margin.left) + ',' + (-margin.top) + ' ' +
-				(chartWidth - legendWidth - 1) + ',' + (-margin.top) + ' ' +
-				(chartWidth - legendWidth - 1) + ',' + legendHeight + ' ' +
-				(chartWidth + margin.right) + ',' + legendHeight + ' ' +
-				(chartWidth + margin.right) + ',' + (chartHeight + margin.bottom) + ' ' +
-				(-margin.left) + ',' + (chartHeight + margin.bottom));
+		// Parse the date / time
+		var parseDate = d3.time.format('%Y-%m-%d').parse;
 
-		var axes = svg.append('g')
-			.attr('clip-path', 'url(#axes-clip)');
+		// Set the ranges
+		var x = d3.time.scale().range([0, width]);
+		var y = d3.scale.linear().range([height, 0]);
 
-		axes.append('g')
-			.attr('class', 'x axis')
-			.attr('transform', 'translate(0,' + chartHeight + ')')
-			.call(xAxis);
+		// Define the axes
+		var xAxis = d3.svg.axis().scale(x)
+		    .orient("bottom").ticks(5);
 
-		axes.append('g')
-			.attr('class', 'y axis')
-			.call(yAxis)
-			.append('text')
-			.attr('transform', 'rotate(-90)')
-			.attr('y', 6)
-			.attr('dy', '.71em')
-			.style('text-anchor', 'end')
-			.text('Time (s)');
+		var yAxis = d3.svg.axis().scale(y)
+		    .orient("left").ticks(5);
 
-		var legend = svg.append('g')
-			.attr('class', 'legend')
-			.attr('transform', 'translate(' + (chartWidth - legendWidth) + ', 0)');
+		// Define the line
+		var priceline = d3.svg.line()
+		    .x(function(d) { return x(d.date); })
+		    .y(function(d) { return y(d.time); });
 
-		legend.append('rect')
-			.attr('class', 'legend-bg')
-			.attr('width', legendWidth)
-			.attr('height', legendHeight);
+		// Adds the svg canvas
+		var svg = d3.select("#trends")
+		    .append("svg")
+				.attr('class', 'trends')
+		        .attr("width", width + margin.left + margin.right)
+		        .attr("height", height + margin.top + margin.bottom)
+		    .append("g")
+		        .attr("transform",
+		              "translate(" + margin.left + "," + margin.top + ")");
 
-		legend.append('rect')
-			.attr('class', 'outer')
-			.attr('width', 75)
-			.attr('height', 20)
-			.attr('x', 10)
-			.attr('y', 10);
+	    data.forEach(function(d) {
+			d.date = parseDate(d.date);
+			d.time = +d.time;
+	    });
 
-		legend.append('text')
-			.attr('x', 115)
-			.attr('y', 25)
-			.text('5% - 95%');
+	    // Scale the range of the data
+	    x.domain(d3.extent(data, function(d) { return d.date; }));
+	    y.domain([0, d3.max(data, function(d) { return d.time; })]);
 
-		legend.append('rect')
-			.attr('class', 'inner')
-			.attr('width', 75)
-			.attr('height', 20)
-			.attr('x', 10)
-			.attr('y', 40);
+	    // Nest the entries by host
+	    var dataNest = d3.nest()
+	        .key(function(d) {return d.host;})
+	        .entries(data);
 
-		legend.append('text')
-			.attr('x', 115)
-			.attr('y', 55)
-			.text('25% - 75%');
+	    var color = d3.scale.category10();   // set the colour scale
 
-		legend.append('path')
-			.attr('class', 'median-line')
-			.attr('d', 'M10,80L85,80');
+	    legendSpace = width/dataNest.length; // spacing for the legend
 
-		legend.append('text')
-			.attr('x', 115)
-			.attr('y', 85)
-			.text('Median');
-	}
+	    // Loop through each host / key
+	    dataNest.forEach(function(d,i) {
 
-	function drawPaths(svg, data, x, y) {
-		var upperOuterArea = d3.svg.area()
-			.interpolate('basis')
-			.x(function (d) {
-				return x(d.date) || 1;
-			})
-			.y0(function (d) {
-				return y(d.pct95);
-			})
-			.y1(function (d) {
-				return y(d.pct75);
-			});
+	        svg.append("path")
+	            .attr("class", "line")
+	            .style("stroke", function() { // Add the colours dynamically
+	                return d.color = color(d.key); })
+	            .attr("id", 'tag'+d.key.replace(/\s+/g, '')) // assign ID
+	            .attr("d", priceline(d.values));
 
-		var upperInnerArea = d3.svg.area()
-			.interpolate('basis')
-			.x(function (d) {
-				return x(d.date) || 1;
-			})
-			.y0(function (d) {
-				return y(d.pct75);
-			})
-			.y1(function (d) {
-				return y(d.pct50);
-			});
+	        // Add the Legend
+	        svg.append("text")
+	            .attr("x", (legendSpace/2)+i*legendSpace)  // space legend
+	            .attr("y", height + (margin.bottom/2)+ 5)
+	            .attr("class", "legend")    // style the legend
+	            .style("fill", function() { // Add the colours dynamically
+	                return d.color = color(d.key); })
+	            .on("click", function(){
+	                // Determine if current line is visible
+	                var active   = d.active ? false : true,
+	                newOpacity = active ? 0 : 1;
+	                // Hide or show the elements based on the ID
+	                d3.select("#tag"+d.key.replace(/\s+/g, ''))
+	                    .transition().duration(100)
+	                    .style("opacity", newOpacity);
+	                // Update whether or not the elements are active
+	                d.active = active;
+	                })
+	            .text(d.key);
 
-		var medianLine = d3.svg.line()
-			.interpolate('basis')
-			.x(function (d) {
-				return x(d.date);
-			})
-			.y(function (d) {
-				return y(d.pct50);
-			});
+	    });
 
-		var lowerInnerArea = d3.svg.area()
-			.interpolate('basis')
-			.x(function (d) {
-				return x(d.date) || 1;
-			})
-			.y0(function (d) {
-				return y(d.pct50);
-			})
-			.y1(function (d) {
-				return y(d.pct25);
-			});
+	    // Add the X Axis
+	    svg.append("g")
+	        .attr("class", "x axis")
+	        .attr("transform", "translate(0," + height + ")")
+	        .call(xAxis);
 
-		var lowerOuterArea = d3.svg.area()
-			.interpolate('basis')
-			.x(function (d) {
-				return x(d.date) || 1;
-			})
-			.y0(function (d) {
-				return y(d.pct25);
-			})
-			.y1(function (d) {
-				return y(d.pct05);
-			});
+	    // Add the Y Axis
+	    svg.append("g")
+	        .attr("class", "y axis")
+	        .call(yAxis);
 
-		svg.datum(data);
-
-		svg.append('path')
-			.attr('class', 'area upper outer')
-			.attr('d', upperOuterArea)
-			.attr('clip-path', 'url(#rect-clip)');
-
-		svg.append('path')
-			.attr('class', 'area lower outer')
-			.attr('d', lowerOuterArea)
-			.attr('clip-path', 'url(#rect-clip)');
-
-		svg.append('path')
-			.attr('class', 'area upper inner')
-			.attr('d', upperInnerArea)
-			.attr('clip-path', 'url(#rect-clip)');
-
-		svg.append('path')
-			.attr('class', 'area lower inner')
-			.attr('d', lowerInnerArea)
-			.attr('clip-path', 'url(#rect-clip)');
-
-		svg.append('path')
-			.attr('class', 'median-line')
-			.attr('d', medianLine)
-			.attr('clip-path', 'url(#rect-clip)');
-	}
-
-	function addMarker(marker, svg, chartHeight, x) {
-		var radius    = 32,
-		    xPos      = x(marker.date) - radius - 3,
-		    yPosStart = chartHeight - radius - 3,
-		    yPosEnd   = (marker.type === 'Client' ? 80 : 160) + radius - 3;
-
-		var markerG = svg.append('g')
-			.attr('class', 'marker ' + marker.type.toLowerCase())
-			.attr('transform', 'translate(' + xPos + ', ' + yPosStart + ')')
-			.attr('opacity', 0);
-
-		markerG.transition()
-			.duration(1000)
-			.attr('transform', 'translate(' + xPos + ', ' + yPosEnd + ')')
-			.attr('opacity', 1);
-
-		markerG.append('path')
-			.attr('d', 'M' + radius + ',' + (chartHeight - yPosStart) + 'L' + radius + ',' + (chartHeight - yPosStart))
-			.transition()
-			.duration(1000)
-			.attr('d', 'M' + radius + ',' + (chartHeight - yPosEnd) + 'L' + radius + ',' + (radius * 2));
-
-		markerG.append('circle')
-			.attr('class', 'marker-bg')
-			.attr('cx', radius)
-			.attr('cy', radius)
-			.attr('r', radius);
-
-		markerG.append('text')
-			.attr('x', radius)
-			.attr('y', radius * 0.9)
-			.text(marker.type);
-
-		markerG.append('text')
-			.attr('x', radius)
-			.attr('y', radius * 1.5)
-			.text(marker.version);
-	}
-
-	function startTransitions(svg, chartWidth, chartHeight, rectClip, markers, x) {
-		rectClip.transition()
-			.duration(1000 * markers.length)
-			.attr('width', chartWidth);
-
-		markers.forEach(function (marker, i) {
-			setTimeout(function () {
-				addMarker(marker, svg, chartHeight, x);
-			}, 1000 + 500 * i);
-		});
-	}
-
-	function makeChart(data, markers) {
-		var svgWidth    = 960,
-		    svgHeight   = 500,
-		    margin      = {
-			    top:    20,
-			    right:  20,
-			    bottom: 40,
-			    left:   40
-		    },
-		    chartWidth  = 750 - margin.left - margin.right,
-		    chartHeight = 500 - margin.top - margin.bottom;
-
-		var x = d3.time.scale()
-			.range([
-				0,
-				chartWidth
-			])
-			.domain(d3.extent(data, function (d) {
-				return d.date;
-			})),
-		    y = d3.scale.linear()
-			    .range([
-				    chartHeight,
-				    0
-			    ])
-			    .domain([
-				    0,
-				    d3.max(data, function (d) {
-					    return d.pct95;
-				    })
-			    ]);
-
-		var xAxis = d3.svg.axis()
-			.scale(x)
-			.orient('bottom')
-			.innerTickSize(-chartHeight)
-			.outerTickSize(0)
-			.tickPadding(10),
-
-		    yAxis = d3.svg.axis()
-			    .scale(y)
-			    .orient('left')
-			    .innerTickSize(-chartWidth)
-			    .outerTickSize(0)
-			    .tickPadding(10);
-
-		var svg = d3.select('#trends')
-			.append('svg')
-			.attr('class', 'Hello')
-			.attr('width', 750)
-			.attr('height', 500)
-			.append('g')
-			.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-		// clipping to start chart hidden and slide it in later
-		var rectClip = svg.append('clipPath')
-			.attr('id', 'rect-clip')
-			.append('rect')
-			.attr('width', 0)
-			.attr('height', chartHeight);
-
-		addAxesAndLegend(svg, xAxis, yAxis, margin, chartWidth, chartHeight);
-		drawPaths(svg, data, x, y);
-		startTransitions(svg, chartWidth, chartHeight, rectClip, markers, x);
-	}
-
-	var parseDate = d3.time.format('%Y-%m-%d').parse;
-	d3.json('assets/data/data.json', function (error, rawData) {
-		if (error) {
-			console.error(error);
-			return;
-		}
-
-		var data = rawData.map(function (d) {
-			return {
-				date:  parseDate(d.date),
-				pct05: d.pct05 / 1000,
-				pct25: d.pct25 / 1000,
-				pct50: d.pct50 / 1000,
-				pct75: d.pct75 / 1000,
-				pct95: d.pct95 / 1000
-			};
-		});
-
-		d3.json('assets/data/markers.json', function (error, markerData) {
-			if (error) {
-				console.error(error);
-				return;
-			}
-
-			var markers = markerData.map(function (marker) {
-				return {
-					date:    parseDate(marker.date),
-					type:    marker.type,
-					version: marker.version
-				};
-			});
-
-			makeChart(data, markers);
-		});
 	});
+
+
 
 	if (token != null) {
 		getTodaysTimeSpent();
