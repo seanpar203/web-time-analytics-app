@@ -2,3 +2,8 @@
 @import "pie-chart";
 @import "trends-graph";
 @import "overide";
+
+body {
+  min-width: 1200px;
+  overflow: auto;
+}
