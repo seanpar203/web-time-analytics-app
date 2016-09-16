@@ -1,0 +1,15 @@
+header {
+  display: none;
+  margin-bottom: 25px !important;
+}
+
+
+
+table {
+  display: none;
+
+  .website {
+	overflow: hidden;
+	text-overflow: ellipsis;
+  }
+}

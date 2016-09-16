@@ -1,0 +1,12 @@
+#pieChart {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 100%;
+
+  svg {
+	cursor: pointer;
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+  }
+}
