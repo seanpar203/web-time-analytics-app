@@ -23,7 +23,7 @@ const path = {
 		'assets/js/uuid.js',
 		'assets/js/time-spent.js'
 	],
-	sass: 'assets/sass/*.scss',
+	sass: 'assets/sass/app.scss',
 	dist: './dist/'
 };
 
