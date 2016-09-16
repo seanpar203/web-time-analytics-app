@@ -1,8 +1,29 @@
+#trends {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+
+  #trends-overlay {
+	content: '';
+	position: absolute;
+	display: block;
+	width: 747px;
+	right: 0;
+	top: 25px;
+	height: 304px;
+	color: #FFF;
+	background-color: #FFF;
+  }
+}
+
 .trends {
+  background-color: #FFF;
+
   path {
 	stroke: steelblue;
 	stroke-width: 2;
 	fill: none;
+	position: relative;
   }
 
   .axis path,
@@ -14,8 +35,9 @@
   }
 
   .legend {
-	font-size: 16px;
+	font-size: 11px;
 	font-weight: bold;
 	text-anchor: middle;
+	cursor: pointer;
   }
 }
