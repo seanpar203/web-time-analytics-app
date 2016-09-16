@@ -16,21 +16,21 @@ const browserSync = require('browser-sync')
 
 
 const path = {
-	js:   [
+	js: [
 		'assets/js/jquery-3.1.0.min.js',
 		'assets/js/d3.min.js',
 		'assets/js/d3pie.min.js',
 		'assets/js/uuid.js',
 		'assets/js/time-spent.js'
 	],
-	sass: 'assets/sass/app.scss',
+	sass: 'assets/sass/*.scss',
 	dist: './dist/'
 };
 
 gulp.task('scripts', function () {
 	return gulp.src(path.js)
-		.pipe(concat('app.js'))
-		.pipe(gulp.dest(path.dist));
+	           .pipe(concat('app.js'))
+	           .pipe(gulp.dest(path.dist));
 });
 
 
@@ -40,9 +40,9 @@ gulp.task('clean', function () {
 
 gulp.task('sass', function () {
 	return gulp.src(path.sass)
-		.pipe(sass())
-		.pipe(cleanCSS('app.css'))
-		.pipe(gulp.dest(path.dist));
+	           .pipe(sass())
+	           .pipe(cleanCSS('app.css'))
+	           .pipe(gulp.dest(path.dist));
 });
 
 gulp.task('watch', function () {
@@ -51,5 +51,8 @@ gulp.task('watch', function () {
 });
 
 gulp.task('default', function () {
-	runSequence('clean', ['sass', 'scripts'], 'watch');
+	runSequence('clean', [
+		'sass',
+		'scripts'
+	], 'watch');
 });
