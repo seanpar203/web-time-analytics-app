@@ -3,16 +3,26 @@
   max-width: 800px;
   margin: 0 auto;
 
+  ul {
+	display: inline-block;
+	list-style-type: none;
+
+	li {
+	  display: inline-block;
+	  padding: 0 5px;
+	}
+  }
+
   #trends-overlay {
-	content: '';
-	position: absolute;
-	display: block;
-	width: 747px;
-	right: 0;
-	top: 25px;
-	height: 304px;
-	color: #FFF;
-	background-color: #FFF;
+    content: '';
+    position: absolute;
+    display: block;
+    width: 747px;
+    right: 0;
+    top: 10px;
+    height: 373px;
+    color: #FFF;
+    background-color: #FFF;
   }
 }
 
