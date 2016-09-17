@@ -128,37 +128,43 @@ $(() => {
 	}
 
 
-	$('table').click(event => {
-		if (event.target.value !== undefined) {
-			let hostName = event.target.value;
-			let hostColor = event.target.style.color;
-			let overlay = $('#trends-overlay');
+	$('table')
+		.click(event => {
+			if (event.target.value !== undefined) {
+				let hostName = event.target.value;
+				let hostColor = event.target.style.color;
+				let overlay = $('#trends-overlay');
 
-			if (trends.find(trend => trend.host == hostName)) {
-				trends.filter(trend => trend.host !== hostName);
-				$('.trends').remove();
-				createTrends(trends);
-				overlay.animate({width: '747px'}, 0);
-				overlay.animate({width: '0'}, 2000);
-			} else {
-				$.ajax({
-					method:  'GET',
-					url:     baseUrl + `/time/${hostName}`,
-					headers: {'Authorization': token},
-					success: res => {
-						res.data.forEach(trend => {
-							trend.color = hostColor;
-							trends.push(trend);
-						});
-						$('.trends').remove();
+				if (trends.find(trend => trend.host == hostName)) {
+					trends = trends.filter(t => t.host !== hostName);
+					$('.trends')
+						.remove();
+					if (trends.length >= 1) {
 						createTrends(trends);
 						overlay.animate({width: '747px'}, 0);
 						overlay.animate({width: '0'}, 2000);
 					}
-				})
+				}
+				else {
+					$.ajax({
+						method: 'GET',
+						url: baseUrl + `/time/${hostName}`,
+						headers: {'Authorization': token},
+						success: res => {
+							res.data.forEach(trend => {
+								trend.color = hostColor;
+								trends.push(trend);
+							});
+							$('.trends')
+								.remove();
+							createTrends(trends);
+							overlay.animate({width: '747px'}, 0);
+							overlay.animate({width: '0'}, 2000);
+						}
+					})
+				}
 			}
-		}
-	});
+		});
 
 	// Get the data
 	function createTrends(data) {
@@ -224,7 +230,6 @@ $(() => {
 
 		// Loop through each host / key
 		dataNest.forEach(function (d, i) {
-			console.log(d.values[i]);
 
 			svg.append("path")
 				.attr("class", "line")
