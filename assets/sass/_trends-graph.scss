@@ -4,27 +4,39 @@
   margin: 0 auto;
 
   ul {
-	display: inline-block;
 	list-style-type: none;
+  }
 
-	li {
-	  display: inline-block;
-	  padding: 0 5px;
+  li {
+	position: relative;
+	display: inline-block;
+	padding: 0 5px;
+	padding-left: 30px;
+	max-width: 120px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+
+	span {
+	  position: absolute;
+	  height: 25px;
+	  width: 25px;
+	  left: 0;
 	}
   }
 
   #trends-overlay {
-    content: '';
-    position: absolute;
-    display: block;
-    width: 747px;
-    right: 0;
-    top: 10px;
-    height: 373px;
-    color: #FFF;
-    background-color: #FFF;
+	content: '';
+	position: absolute;
+	display: block;
+	width: 747px;
+	right: 0;
+	top: -7px;
+	height: 373px;
+	color: #FFF;
+	background-color: #FFF;
   }
 }
+
 
 .trends {
   background-color: #FFF;
