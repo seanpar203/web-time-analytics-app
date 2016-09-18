@@ -137,12 +137,12 @@ $(() => {
 
 				if (trends.find(trend => trend.host == hostName)) {
 					trends = trends.filter(t => t.host !== hostName);
-					$('.trends')
-						.remove();
+					$('.trends').remove();
 					if (trends.length >= 1) {
 						createTrends(trends);
+						$('html, body').animate({scrollTop: $(document).height()}, 750);
 						overlay.animate({width: '747px'}, 0);
-						overlay.animate({width: '0'}, 2000);
+						overlay.animate({width: '0'}, 1000);
 					}
 				}
 				else {
@@ -155,11 +155,11 @@ $(() => {
 								trend.color = hostColor;
 								trends.push(trend);
 							});
-							$('.trends')
-								.remove();
+							$('.trends').remove();
 							createTrends(trends);
+							$('html, body').animate({scrollTop: $(document).height()}, 750);
 							overlay.animate({width: '747px'}, 0);
-							overlay.animate({width: '0'}, 2000);
+							overlay.animate({width: '0'}, 1000);
 						}
 					})
 				}
