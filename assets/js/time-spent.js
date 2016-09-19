@@ -25,7 +25,7 @@ $(() => {
 	 */
 	function handleSucces(res) {
 		// Get static json for creating pie chart.
-		d3.json('assets/data/pie.json', (err, pieData) => {
+		d3.json('pie.json', (err, pieData) => {
 
 			// Attach Dynamic data to content.
 			pieData.data.content = res.data;

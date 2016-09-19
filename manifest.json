@@ -4,15 +4,15 @@
     "description": "Helps with data visualization based on time spent on specific web pages.",
     "version": "1.0",
     "browser_action": {
-        "default_icon": "assets/images/icon.png",
-        "default_popup": "assets/html/popup.html",
+        "default_icon": "public/icon.png",
+        "default_popup": "public/popup.html",
         "default_title": "See Web Time Usage."
     },
     "background": {
         "scripts": [
             "assets/js/uuid.js",
             "assets/js/jquery-3.1.0.min.js",
-            "assets/js/background.js"
+            "public/background.js"
         ]
     },
     "permissions": [

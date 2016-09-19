@@ -31,6 +31,7 @@
     "gulp-concat": "^2.6.0",
     "gulp-concat-css": "^2.3.0",
     "gulp-htmlmin": "^2.0.0",
+    "gulp-minify": "0.0.14",
     "gulp-sass": "^2.3.2",
     "gulp-uglify": "^2.0.0",
     "gulp-uglifyjs": "^0.6.2",

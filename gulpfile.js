@@ -6,6 +6,7 @@ const gulp = require('gulp');
 const del = require('del');
 const pump = require('pump');
 const uglify = require('gulp-uglify');
+const minify = require('gulp-minify');
 const htmlmin = require('gulp-htmlmin');
 const cleanCSS = require('gulp-clean-css');
 const runSequence = require('run-sequence');
@@ -24,18 +25,36 @@ const globs = {
 		'assets/js/uuid.js',
 		'assets/js/time-spent.js'
 	],
+	gjs:  [
+		'assets/js/time-spent.js',
+		'assets/js/background.js',
+		'assets/data/*'
+	],
+	imgs: 'assets/images/*',
 	sass: 'assets/sass/*.scss',
 	html: 'assets/html/*.html',
 	css:  'semantic/dist/semantic.min.css'
 };
+
+
 gulp.task('clean', function () {
 	return del(globs.prod)
+});
+
+gulp.task('google-scripts', function () {
+	return gulp.src(globs.gjs)
+		.pipe(gulp.dest(globs.prod));
 });
 
 gulp.task('scripts', function () {
 	return gulp.src(globs.js)
 		.pipe(concat('app.js'))
 		.pipe(gulp.dest(globs.prod));
+});
+
+gulp.task('images', function () {
+	return gulp.src(globs.imgs)
+		.pipe(gulp.dest(globs.prod))
 });
 
 gulp.task('html', function () {
@@ -67,6 +86,8 @@ gulp.task('default', function () {
 		'html',
 		'sass',
 		'scripts',
-		'css'
+		'images',
+		'css',
+		'google-scripts'
 	], 'watch');
 });
