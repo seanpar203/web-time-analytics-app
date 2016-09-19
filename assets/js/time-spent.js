@@ -135,36 +135,51 @@ $(() => {
 				let hostColor = event.target.style.color;
 				let overlay = $('#trends-overlay');
 
+
 				if (trends.find(trend => trend.host == hostName)) {
 					trends = trends.filter(t => t.host !== hostName);
-					$('.trends').remove();
+					resetGraph();
 					if (trends.length >= 1) {
-						createTrends(trends);
-						$('html, body').animate({scrollTop: $(document).height()}, 750);
-						overlay.animate({width: '747px'}, 0);
-						overlay.animate({width: '0'}, 1000);
+						startGraph();
 					}
 				}
+
 				else {
 					$.ajax({
-						method: 'GET',
-						url: baseUrl + `/time/${hostName}`,
+						method:  'GET',
+						url:     baseUrl + `/time/${hostName}`,
 						headers: {'Authorization': token},
 						success: res => {
-							res.data.forEach(trend => {
-								trend.color = hostColor;
-								trends.push(trend);
-							});
-							$('.trends').remove();
-							createTrends(trends);
-							$('html, body').animate({scrollTop: $(document).height()}, 750);
-							overlay.animate({width: '747px'}, 0);
-							overlay.animate({width: '0'}, 1000);
+							res.data.forEach(addTrend);
+							resetGraph();
+							startGraph();
 						}
 					})
 				}
+
+				// For each call back, adds to trends global var.
+				function addTrend(trend) {
+					trend.color = hostColor;
+					trends.push(trend);
+				}
+
+				// Beings graphing cycle.
+				function startGraph() {
+					$('html, body').animate({scrollTop: $(document).height()}, 750);
+					createTrends(trends);
+					overlay.animate({width: '0'}, 1000);
+				}
+
+				// Resets graph to starting position.
+				function resetGraph() {
+					overlay.animate({width: '747px'}, 0);
+					$('.trends').remove();
+				}
 			}
 		});
+
+
+
 
 	// Get the data
 	function createTrends(data) {
