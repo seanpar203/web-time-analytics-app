@@ -35,8 +35,11 @@
 	color: #FFF;
 	background-color: #FFF;
   }
-}
 
+  svg:not(:root) {
+	overflow: visible;
+  }
+}
 
 .trends {
   background-color: #FFF;
