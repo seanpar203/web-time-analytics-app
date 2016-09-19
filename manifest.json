@@ -10,9 +10,9 @@
     },
     "background": {
         "scripts": [
-            "uuid.js",
-            "jquery-3.1.0.min.js",
-            "background.js"
+            "assets/js/uuid.js",
+            "assets/js/jquery-3.1.0.min.js",
+            "assets/js/background.js"
         ]
     },
     "permissions": [
