@@ -1,37 +1,52 @@
 {
   "size": {
-	"canvasWidth": 200,
-	"canvasHeight": 200,
+	"canvasWidth": 500,
+	"pieInnerRadius": "40%",
 	"pieOuterRadius": "100%"
   },
   "data": {
 	"sortOrder": "value-desc",
+	"smallSegmentGrouping": {
+	  "enabled": true
+	},
 	"content": []
   },
   "labels": {
 	"outer": {
-	  "format": "none",
-	  "pieDistance": 10
+	  "format": "label-value1",
+	  "hideWhenLessThanPercentage": 5,
+	  "pieDistance": 40
 	},
 	"inner": {
-	  "hideWhenLessThanPercentage": 6
+	  "hideWhenLessThanPercentage": 5
 	},
 	"mainLabel": {
-	  "fontSize": 12
+	  "fontSize": 11,
+	  "color": "#87AB66"
 	},
 	"percentage": {
 	  "color": "#ffffff",
 	  "decimalPlaces": 0
 	},
 	"value": {
-	  "color": "#adadad",
+	  "color": "#EBA538",
 	  "fontSize": 11
 	},
 	"lines": {
 	  "enabled": true
 	},
 	"truncation": {
-	  "enabled": true
+	  "enabled": true,
+	  "truncateLength": 20
+	}
+  },
+  "tooltips": {
+	"enabled": true,
+	"type": "placeholder",
+	"string": "{label}",
+	"styles": {
+	  "fadeInSpeed": 500,
+	  "borderRadius": 0
 	}
   },
   "effects": {

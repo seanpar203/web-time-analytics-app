@@ -9,7 +9,7 @@
 <body>
 
 <header>
-	<div class="top-bar"></div>
+	<div class='top-bar'></div>
 	<div>
 		<h1 class='ui header'>Your Time Spent on the Web.</h1>
 		<h2 class='ui sub header'>You've spent
@@ -19,30 +19,27 @@
 	</div>
 </header>
 
-<div class='ui stackable 2 column grid container'>
-	<div class='six wide column ui center aligned'>
-		<div id='pieChart'></div>
-	</div>
+<div class='pie-chart-sign'></div>
+<div id='pieChart'></div>
 
-	<div class='ten wide column'>
-		<table class='ui compact celled definition table tablet stackable center aligned' id='#pie-chart-table'>
-			<thead>
-			<tr>
-				<th></th>
-				<th>Color</th>
-				<th>Website</th>
-				<th>Time Elapsed</th>
-				<th>Percentage</th>
-			</tr>
-			</thead>
-			<tbody>
-			</tbody>
-		</table>
-	</div>
+<div class='ui container'>
+	<table class='ui compact celled definition table center aligned' id='#pie-chart-table'>
+		<thead>
+		<tr>
+			<th></th>
+			<th>Color</th>
+			<th>Website</th>
+			<th>Time Elapsed</th>
+			<th>Percentage</th>
+		</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
 </div>
 
 
-<div class='ui center aligned container'>
+<div class='ui center aligned'>
 	<div id='trends'>
 		<ul id='trends-hierarchy'></ul>
 		<div id='trends-overlay'></div>
