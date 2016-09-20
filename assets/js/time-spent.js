@@ -59,13 +59,14 @@ $(() => {
 							'<td class="color" style=background-color:' + time.color + '>' + '</td>' +
 							'<td class="website">' + time.label + '</td>' +
 							'<td class="time">' + calcTime(time.value).string() + '</td>' +
-						'<td class="percent">' + Math.round(time.value / totalElapsed * 100) + '</td>' +
 					'</tr>'
 				)
 		});
 
 		// Fade in Table.
-		$('.table').fadeIn(1000);
+		let table = $('.table');
+		table.fadeIn(1000);
+		table.css({display: 'inline-block'});
 	}
 
 
@@ -177,9 +178,6 @@ $(() => {
 				}
 			}
 		});
-
-
-
 
 	// Get the data
 	function createTrends(data) {
