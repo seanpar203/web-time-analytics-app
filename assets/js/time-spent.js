@@ -166,9 +166,9 @@ $(() => {
 
 				// Beings graphing cycle.
 				function startGraph() {
-					$('html, body').animate({scrollTop: $(document).height()}, 750);
 					createTrends(trends);
 					overlay.animate({width: '0'}, 1000);
+					$('html, body').animate({scrollTop: $(document).height()}, 750);
 				}
 
 				// Resets graph to starting position.

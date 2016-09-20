@@ -8,11 +8,11 @@
   }
 
   li {
+	color: #FFF;
 	position: relative;
 	display: inline-block;
-	padding: 0 5px;
-	padding-left: 30px;
-	max-width: 120px;
+	padding: 0 15px 0 30px;
+	max-width: 150px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 
@@ -45,7 +45,6 @@
 .trends {
 
   path {
-	stroke: #3e3e3d !important;
 	stroke-width: 2;
 	fill: none;
 	position: relative;
@@ -54,7 +53,7 @@
   .axis path,
   .axis line {
 	fill: none;
-	stroke: grey;
+	stroke: #FFF;
 	stroke-width: 1;
 	shape-rendering: crispEdges;
   }
@@ -62,7 +61,7 @@
   .y {
 	&.axis {
 	  text {
-		fill: #87ab66;
+		fill: #FFF;
 	  }
 	}
   }
@@ -71,7 +70,7 @@
 
 	&.axis {
 	  text {
-		fill: #eba538;
+		fill: #FFF;
 	  }
 	}
   }
