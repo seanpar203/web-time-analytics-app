@@ -1,9 +1,19 @@
 header {
   display: none;
   margin-bottom: 25px !important;
+  text-align: center;
+
+  .top-bar {
+	position: absolute;
+	width: 100%;
+	height: 18px;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	background: url("top-heading.png") no-repeat top;
+	background-size: cover;
+  }
 }
-
-
 
 table {
   display: none;
