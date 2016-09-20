@@ -50,7 +50,7 @@ $(() => {
 			$('tbody')
 				.append(
 					'<tr>' +
-						'<td class="collapsing">'+
+						'<td>'+
 							'<div class="ui fitted slider checkbox">'+
 								'<input style=background-color:' + time.color +'!important;'+'color:' + time.color + '!important' + ' type="checkbox" value='+ time.label + '>'+
 								'<label style=background-color:' + time.color +'!important;'+'color:' + time.color + '!important' + '>' + '</label>'+
