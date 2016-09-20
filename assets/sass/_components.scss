@@ -3,6 +3,10 @@ header {
   margin: 35px 0;
   text-align: center;
 
+  h1, h2 {
+	color: #c3c1b5 !important;
+  }
+
   .top-bar {
 	position: absolute;
 	width: 100%;
@@ -18,12 +22,22 @@ header {
 
 table {
   display: none;
+  background-color: #FFF;
+  width: auto !important;
 }
 
-
-.pie-chart-sign {
+.sign {
+  display: block;
   width: 167px;
   height: 37px;
-  background: url("pie-chart-sign.png") no-repeat left;
-  background-size: contain;
+
+  &.pie {
+	background: url("pie-sign.png") no-repeat left;
+	background-size: contain;
+  }
+
+  &.line {
+	background: url("line-sign.png") no-repeat left;
+	background-size: contain;
+  }
 }

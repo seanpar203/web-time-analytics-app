@@ -3,11 +3,15 @@
 @import "trends-graph";
 @import "overide";
 
+html {
+  background: url("graph-bg.jpg") no-repeat center center fixed;
+  background-size: cover;
+}
 
 body {
+  background-color: transparent;
   width: 1200px;
   overflow: auto;
-  background: url("graph-bg.jpg") no-repeat center;
-  background-size: cover, cover;
   margin: 0 auto;
+  text-align: center;
 }

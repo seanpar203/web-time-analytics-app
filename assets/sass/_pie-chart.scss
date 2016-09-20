@@ -5,4 +5,8 @@
   svg {
 	cursor: pointer;
   }
+
+  svg:not(:root) {
+	overflow: visible;
+  }
 }
