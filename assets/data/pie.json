@@ -1,6 +1,7 @@
 {
   "size": {
-	"canvasWidth": 500,
+	"canvasWidth": 350,
+	"canvasHeight": 350,
 	"pieInnerRadius": "40%",
 	"pieOuterRadius": "100%"
   },
@@ -13,7 +14,7 @@
   },
   "labels": {
 	"outer": {
-	  "format": "label-value1",
+	  "format": "label",
 	  "hideWhenLessThanPercentage": 5,
 	  "pieDistance": 40
 	},
