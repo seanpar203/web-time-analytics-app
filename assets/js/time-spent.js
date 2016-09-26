@@ -1,6 +1,6 @@
 $(() => {
 	/** Sensible Constants */
-	const baseUrl = 'http://wta-server-stage.herokuapp.com/api';
+	const baseUrl = 'http://wta-server-prod.herokuapp.com/api';
 	const sendMsg = chrome.extension.sendMessage;
 	let token = localStorage.getItem('WTA_TOKEN');
 	let totalElapsed = 0;

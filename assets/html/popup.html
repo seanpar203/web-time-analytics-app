@@ -5,17 +5,54 @@
  value "popup.html".
  -->
 <html>
-<head>
-	<title>Web Time Manager</title>
-</head>
-<body>
-	<div id="test">
-		<h1>Hello There</h1>
+	<head>
+		<title>Web Time Manager</title>
+		<style>
+			body {
+				width: 200px;
+				text-align: center;
+				background: url("graph-bg.jpg") no-repeat center;
+				background-size: cover;
+				padding-bottom: 15px;
+				padding-left: 10px;
+				padding-right: 10px;
+			}
 
-		<a href='./time-spent.html' target='_blank'>
-			<button id="btn">Press me!</button>
-		</a>
-	</div>
-</body>
+
+			h3 {
+				color: #87ab66;
+				margin-bottom: 35px;
+			}
+
+			a {
+				display: inline-block;
+				background-color: #4bb3d2;
+				color: #FFF;
+				width: 125px;
+				line-height: 30px;
+				border-radius: 6px;
+				text-decoration: none;
+			}
+
+			a:hover {
+				background-color: #eba538;
+			}
+
+			a:focus {
+				outline: none;
+			}
+
+			a:visited {
+				outline: none;
+			}
+		</style>
+	</head>
+	<body>
+		<h3>
+			Check your time spent today
+		</h3>
+
+		<a href='./time-spent.html' target='_blank'>See Now!</a>
+	</body>
 </html>
 
