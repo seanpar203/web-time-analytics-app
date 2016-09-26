@@ -18,14 +18,14 @@ const browserSync = require('browser-sync').create();
 
 const globs = {
 	prod: 'public/',
-	js:   [
+	js: [
 		'assets/js/jquery-3.1.0.min.js',
 		'assets/js/d3.min.js',
 		'assets/js/d3pie.min.js',
 		'assets/js/uuid.js',
 		'assets/js/time-spent.js'
 	],
-	gjs:  [
+	gjs: [
 		'assets/js/time-spent.js',
 		'assets/js/background.js',
 		'assets/data/*'
@@ -33,7 +33,12 @@ const globs = {
 	imgs: 'assets/images/*',
 	sass: 'assets/sass/*.scss',
 	html: 'assets/html/*.html',
-	css:  'semantic/dist/semantic.min.css'
+	css: 'semantic/dist/semantic.min.css',
+	manifest: 'manifest.json',
+	extras: [
+		'assets/js/jquery-3.1.0.min.js',
+		'assets/js/uuid.js',
+	]
 };
 
 
@@ -81,6 +86,16 @@ gulp.task('watch', function () {
 	gulp.watch(globs.js, ['scripts']);
 });
 
+gulp.task('manifest', function () {
+	return gulp.src(globs.manifest)
+		.pipe(gulp.dest(globs.prod))
+});
+
+gulp.task('extras', function () {
+	return gulp.src(globs.extras)
+		.pipe(gulp.dest(globs.prod))
+});
+
 gulp.task('default', function () {
 	runSequence('clean', [
 		'html',
@@ -88,6 +103,9 @@ gulp.task('default', function () {
 		'scripts',
 		'images',
 		'css',
-		'google-scripts'
+		'google-scripts',
+		'manifest',
+		'extras'
 	], 'watch');
 });
+

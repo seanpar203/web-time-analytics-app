@@ -2,7 +2,7 @@
 
 $(() => {
 	/** Sensible Constants */
-	const BASE_URL = 'http://localhost:5000/api';
+	const BASE_URL = 'http://wta-server-stage.herokuapp.com/api';
 
 	// Chrome API Reassignment.
 	const tabQuery = chrome.tabs.query;
